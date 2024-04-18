@@ -1,19 +1,24 @@
-var x1,x2,y1,y2, angle;
-var colorList = [];
+var x1,x2,y1,y2, angle, phase;
+var colorList = ["#181778", "#FF6600","#788430"];
 
 function setup(){
   createCanvas(1080, 1080);
   background(255);
   ellipse()
   angle = 0;
-  var radius = 500;
+  var radius = 200;
   centerPoint = width/2;
 
-  while (angle < 360){
-    x1 = sin(radians(angle))*radius+centerPoint;
-    y1 = cos(radians(angle))*radius+centerPoint;
-    line(x1, y1, centerPoint, centerPoint)
-    angle += 0.1;
+  var angleSpace = 360 / colorList.length;
+  phase = 180;
+
+
+  for (let i=0;i<colorList.length;i++){
+    x1 = sin(radians(angle+180))*radius+centerPoint;
+    y1 = cos(radians(angle+180))*radius+centerPoint;
+    fill(color(colorList[i]))
+    ellipse(x1, y1, 20, 20)
+    angle += angleSpace;
   }
 }
 
