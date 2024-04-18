@@ -1,0 +1,30 @@
+{% url 'home' as home_url %}
+{% url 'artwork:artwork' as artwork_url %}
+{% url 'exercise:exercise' as exercise_url %}
+{% url 'projects' as project_url %}
+{% url 'music:tracks' as tracks_url %}
+{% url 'tasks:tasks' as task_url %}
+{% url 'cal:calendar' as calendar_url %}
+{% url 'music:covers' as covers_url %}
+
+<div class="topnav" id="myTopnav">
+  <a href="{{ home_url }}" class="active">Home</a>
+  <a href="{{ artwork_url }}">Artwork</a>
+  <a href="{{ exercise_url }}">Exercises</a>
+  <div class='dropdown'>
+    <button class="dropbtn">Music
+     <i class="fa fa-caret-down"></i>
+   </button>
+    <div class="dropdown-content">
+      <a href="{{ project_url }}">Projects</a>
+      <a href="{{ tracks_url }}">Tracks</a>
+      <a href="{{ covers_url }}">Covers</a>
+      </div>
+      </div>
+  <a href="{{ task_url }}">Tasks</a>
+  <a href="{{ calendar_url }}">Calendar</a>
+  <!-- <a class="nav-link" href="{{ cart_url }}"><span class='navbar-cart-count'>Cart {{ request.session.cart_items }}</span> </a> -->
+  <!-- <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a> -->
+</div>

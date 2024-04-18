@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.js"></script> -->
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.js"></script>
+    <script src='{% static "js/hsluv.min.js" %}'></script>
+    <script src='{% static "js/mixbox.js" %}'></script>
+    {% include 'base/js.html' %}
+    <link rel="stylesheet" type="text/css" href='{% static "css/style.css" %}'>
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <main>
+      <button id = "audio" onclick = "toggleAudio()">Play</button>
+      <button onclick = "saveCanvas('SS', 'png')">Save</button>
+    </main>
+    <!-- <script>
+    var url = "{% static 'media/Make A Move - 160 DM.mp3' %}"
+</script> -->
+<script>
+var url = "{% static 'media/' %}"
+var dataURL = "{% static 'data/' %}"
+</script>
+
+
+    <!-- <script src='{% static "js/earth_x_mars.js" %}'></script> -->
+    <script src='{% static "js/grid_functions.js" %}'></script>
+    <script src='{% static "js/line_functions.js" %}'></script>
+    <script src='{% static "js/easingFuncs.js" %}'></script>
+    <script src='{% static "js/colorStuff.js" %}'></script>
+
+    <script src='{% static "js/helper_functions.js" %}'></script>
+    <!-- <script src='{% static "js/circle_sunrise2.js" %}'></script> -->
+    <script src='{% static "js/paint_wheel.js" %}'></script>
+    <!-- <script src='{% static "js/read_spectrograph_animated.js" %}'></script> -->
+
+
+
+  </body>
+</html>

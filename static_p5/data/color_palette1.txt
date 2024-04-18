@@ -1,0 +1,5 @@
+[
+{"hex": "#8fc3de", "hue":  "200.51", "saturation":  "35.59", "value": "87.06 "},
+{"hex": "#dcb472", "hue":  "37.36", "saturation":  "48.18", "value": "86.27 "},
+{"hex": "#dcb472", "hue":  "37.36", "saturation":  "48.18", "value": "86.27 "}
+]

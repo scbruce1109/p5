@@ -1,0 +1,11 @@
+[
+  {"Name": "Mercury", "Aphelion": 0.466697, "Period": 87.9691},
+  {"Name": "Venus", "Aphelion": 0.728213, "Period": 224.7},
+  {"Name": "Earth", "Aphelion": 1.0, "Period": 365.26},
+  {"Name": "Mars", "Aphelion": 1.524, "Period": 687},
+  {"Name": "Jupiter", "Aphelion": 5.4570, "Period": 4331},
+  {"Name": "Saturn", "Aphelion": 10.1238, "Period": 10747},
+  {"Name": "Uranus", "Aphelion": 20.0965, "Period": 30589},
+  {"Name": "Neptune", "Aphelion": 30.33, "Period": 59800},
+  {"Name": "Pluto", "Aphelion": 49.305, "Period": 90560}
+]
