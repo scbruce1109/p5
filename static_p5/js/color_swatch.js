@@ -7,8 +7,8 @@ function preload() {
 }
 
 function setup(){
-  var scale = 8;
-  createCanvas(4800,160);
+  var scale = 1;
+  createCanvas(4800/8,160/8);
   background(255);
   noStroke();
   colorMode(HSB,360,100,100,1.0);
@@ -33,11 +33,12 @@ function setup(){
   var color1 = color('#181778');
   var color2 = color('#FF6600');
 
-var hexList = ["#181778","#FF6600"]
+var hexList = ["#181778",'#788430',"#FF6600","#181778"]
 var cPalette = new colorPalette(hexList);
 console.log(cPalette.colorList)
   // var color1 = color('#53fd02');
   // var color2 = color('#025ca2');
+
 
 
 // 440356
@@ -50,7 +51,7 @@ console.log(cPalette.colorList)
     //// regular hsb lerp
     colorMode(HSB,360,100,100,1.0);
     var y = 0;
-    fill(cPalette.mapColor(curLerp, "HSB", null,null,QUADRATIC_))
+    fill(cPalette.mapColor(curLerp, "HSLUV", null,null,LINEAR_))
     // fill(cPalette.colorList[0]);
     rect(x,y,width/steps,20*scale);
     y +=height/10;
@@ -105,7 +106,10 @@ console.log(cPalette.colorList)
     // console.log(curLerp)
 
   }
-
+  stroke(0)
+line(width/3,0,width/3,height)
+line((width/3)*2,0,(width/3)*2,height)
+line((width/3)*3,0,(width/3)*3,height)
 
   // var colors = new colorPalette(result)
   //
