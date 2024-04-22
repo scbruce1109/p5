@@ -208,6 +208,36 @@ class colorPalette{
 
   }
 
+  getColor(val, reps){
+     if (val > 1.0){
+       val = 1.0;
+     }
+     if (val < 0.0){
+       val = 0.0;
+     }
+     var stop;
+     var segLength = 1 / (this.colorList.length*reps);
+    // console.log(segLength)
+
+     for (let i = 0;i< (this.colorList.length*reps);i++){
+      // lBound = segLength * i;
+      var hBound = segLength * (i+1);
+
+      if (val <= hBound){
+        // console.log('hey')
+        // console.log(hBound)
+        stop = i;
+        break;
+      }
+       }
+       // console.log(stop)
+       stop2 = stop % this.colorList.length;
+       // console.log((stop2));
+
+      return this.colorList[stop2]
+
+   }
+
   mapColor(colorVal, colorSpace, start_, end, type, ease){
     var start;
     var counter;

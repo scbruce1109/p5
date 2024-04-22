@@ -1,8 +1,8 @@
 var x1,x2,y1,y2, angle, phase;
-var colorList = ["#181778", "#FF6600","#788430"];
+var colorList = ["#0d1b44ff","#c62800ff","#feec01ff"];
 
 function setup(){
-  createCanvas(1080, 1080);
+  createCanvas(600, 600);
   background(255);
   ellipse()
   angle = 0;
@@ -23,8 +23,10 @@ function setup(){
     angle += angleSpace;
   }
 
-  var painty = new ColorWheel(colorList, width/2, height/2, 200, 2, 1);
-  painty.colorRing()
+  var painty = new ColorWheel(colorList, width/2, height/2, 200, 10, 20)
+  // painty.colorRing(0);
+  // painty.colorRing(1)
+  painty.display()
 
 }
 
@@ -38,62 +40,85 @@ function draw(){
   // y2 = cos(radians(angle2))*radius2+y1;
 }
 
+function multiColor(colorList, lerpVal){
+   if (lerpVal > 1.0){
+     lerpVal = 1.0;
+   }
+   if (lerpVal < 0.0){
+     lerpVal = 0.0;
+   }
+   var stop;
+   var segLength = 1 / (colorList.length-1);
+
+   for (let i = 0;i< colorList.length-1;i++){
+    lBound = segLength * i;
+    hBound = segLength * (i+1);
+    console.log(lBound + " - " + hBound);
+    if (lerpVal >= lBound && lerpVal <=hBound){
+      stop = i;
+      break;
+    }
+
+    }
+   console.log(colorList[stop])
+   console.log(colorList[stop+1])
+   var newLerp = map(lerpVal,lBound, hBound, 0.0,1.0)
+   var newC = lerpColor2(color(colorList[stop]),color(colorList[stop+1]),newLerp, "MIX", null, null, LINEAR_)
+   console.log("stop num " + stop);
+   return newC;
+ }
+
 class ColorWheel {
   constructor(colorList, xloc, yloc, radius, xRez, yRez){
     colorList.push(colorList[0])
+    this.colorList = colorList;
     this.colorP = new colorPalette(colorList)
     this.x = xloc;
     this.y = yloc;
     this.r = radius;
     this.numX = (colorList.length-1)*xRez;
     this.numY = yRez;
-    this.angle = 360 / this.numX;
+    this.angle = 360 / this.numX+1;
     this.ySpace = this.r / this.numY;
+    this.xSpace = 360 / this.numX;
 
   }
 
-  colorRing(radius1, radius2, numSegs, offset, angle){
+  colorRing(depth){
     var pList = [];
     var offset;
     if (! offset){
       offset = 0;
     }
     offset = offset - 90;
-    var spacing = 360 / this.numX;
+    // var spacing = 360 / this.numX;
+    var r1 = this.r-depth* this.ySpace;
+      var r2 = this.r-(depth+1)* this.ySpace;
 
     for (let i=0;i<this.numX;i++){
-      var theta = i*spacing+offset
-      var daArc = generateArc(this.x,this.y,this.r,this.r-20,this.angle,(360-theta-90)-this.angle/2)
+      var theta = i*this.xSpace+offset
+      var daArc = generateArc(this.x,this.y,r1,r2-1,this.angle,(360-theta-90)-this.angle/2)
       var daShape = new myShape(daArc);
-      var lerpV = map(i*spacing, 0,359,0.0,1.0)
+      var lerpV = map(i*this.xSpace, 0,359,0.0,1.0)
       console.log('lerpv')
       console.log(lerpV)
-      var fillC = this.colorP.mapColor(lerpV, 'MIX',null,null,LINEAR_,null)
-      console.log(fillC)
-      noStroke();
-      fill(fillC)
-      // fill(random(255));
+      var fillC = multiColor(this.colorList, lerpV)
+      var yLerp = map(depth,0,this.numY,0.0,1.0)
+      var fillC2 = lerpColor2(fillC,color(360),yLerp, "MIX", null, null, LINEAR_)
+      stroke(fillC2);
+      fill(fillC2)
       daShape.display();
-      // var x = xloc + cos(radians(i*spacing+offset)) * xsize;
-      // var y = yloc + sin(radians(i*spacing+offset)) * ysize;
-      // pList.push(new p5.Vector(x,y))
     }
   }
 
   display(){
-    var ySpacing = this.r / this.numY;
-    var angle = 360 / numX;
+    // var ySpacing = this.r / this.numY;
+    // var angle = 360 / numX;
 
-    for (let i = 0;i<numY;i++){
-      var r1 = this.r-i* ySpacing;
-      var r2 = radius-(i+1)* ySpacing;
-      arcRing(xloc,yloc,r1,r2,numX,off,angle)
-      // num += 1
-      // off += 10;
-      // noFill();
-      // stroke(0);
-      // ellipse(xloc,yloc,r*2,r*2);
-
+    for (let i = 0;i<this.numY;i++){
+      // var r1 = this.r-i* ySpacing;
+      // var r2 = radius-(i+1)* ySpacing;
+      this.colorRing(i);
     }
 
   }
