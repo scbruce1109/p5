@@ -1,8 +1,8 @@
-var colorList = ["#0d1b44ff","#c62800ff","#feec01ff"];
+var colorList = ["#0d1b44ff","#c62800ff","#feec01ff","#0d1b44ff"];
 
 function setup() {
   var colP = new colorPalette(colorList);
-  createCanvas(1000, 1000);
+  createCanvas(400, 400);
   colorMode(HSB, 360,100,100,100);
   let rez = 0.001;
   noStroke();
@@ -10,7 +10,8 @@ function setup() {
   for (i = 0;i<width;i++){
     for (j = 0;j<height;j++){
       n = noise(i*rez,j*rez)
-      var fillC = colP.getColor(n, 100);
+      var fillC = colP.mapColor(n, "HSB",null,null,LINEAR_,null,10);
+      // var fillC = colP.getColor(n,10);
 
 
       let brt = map(n,0,1,0,100);

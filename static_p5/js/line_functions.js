@@ -54,3 +54,54 @@ function getAngle(origin, endpoint){
   pop();
   return theta;
 }
+
+class MyLine{
+
+  constructor(x1,y1,x2,y2,numPoints){
+  this.origin = new p5.Vector(x1,y1);
+  this.end = new p5.Vector(x2,y2)
+  this.dist = this.origin.dist(this.end)
+  this.points = [];
+  this.angle = getAngle(this.origin,this.end);
+
+  var segLen = this.dist / numPoints;
+  for (let i =0;i<=this.dist;i+=segLen){
+    var x = this.origin.x + cos(this.angle) * i;
+    var y = this.origin.y + sin(this.angle) * i;
+
+    this.points.push([x,y])
+  }
+
+  console.log(this.points)
+
+}
+
+offsetPoints(amount){
+  var perpAngle = this.angle + PI/2;
+  for (let i = 1;i<this.points.length-1;i++){
+
+    console.log(degrees(this.angle))
+    console.log(degrees(perpAngle))
+    var rando = random(-amount,amount)
+    console.log(amount)
+    var newX = this.points[i][0] + cos(perpAngle)*rando;
+    var newY = this.points[i][1] + sin(perpAngle)*rando;
+    console.log('hey there')
+    this.points[i] = [newX,newY]
+    // ellipse(this.points[i][0],this.points[i][1],5,5);
+  }
+}
+
+  display(){
+    // line(this.origin.x,this.origin.y,this.end.x,this.end.y)
+  //   ellipse(this.origin.x,this.origin.y,10,10);
+  // ellipse(this.end.x,this.end.y,10,10);
+  for (let i = 0;i<this.points.length;i++){
+    if(i != this.points.length-1){
+      line(this.points[i][0],this.points[i][1],this.points[i+1][0],this.points[i+1][1])
+    }
+    // console.log('hey there')
+    // ellipse(this.points[i][0],this.points[i][1],5,5);
+  }
+  }
+}

@@ -238,49 +238,64 @@ class colorPalette{
 
    }
 
-  mapColor(colorVal, colorSpace, start_, end, type, ease){
-    var start;
-    var counter;
-    var end;
-    var stop;
-    if (colorVal > 1.0){
+  mapColor(lerpVal, colorSpace, start_, end, type, ease, reps){
+    if (lerpVal > 1.0){
+     lerpVal = 1.0;
+   }
+   if (lerpVal < 0.0){
+     lerpVal = 0.0;
+   }
+    if (! reps){
+     reps = 1;
+   }
+   var stop;
+   var segLength = 1 / ((this.colorList.length-1)*reps);
 
-      colorVal = 1.0;
-    }
-    var inc = 1/(this.colorList.length-1); //// splits mapping range into equal segments
-    // while (colorVal >= start && color){
-    //   start += inc;
-    //   counter ++;
-    // }
-
-    for (let i = 0; i < this.colorList.length-1;i++){
-      start = inc * i;
-      end = inc * (i+1);
-      console.log(start + "  " +colorVal + "  " + end)
-      if (start <= colorVal && colorVal <= end){
-        counter = i;
-        console.log('true')
-        break;
-      }
+   for (let i = 0;i< (this.colorList.length-1)*reps;i++){
+    var lBound = segLength * i;
+    var hBound = segLength * (i+1);
+    if (lerpVal >= lBound && lerpVal <=hBound){
+      stop = i;
+      break;
     }
 
-    var nmap = map(colorVal,start,end,0.0,1.0);
-    console.log(nmap)
-
-    // if (flip){
-    //   var c1 = this.colorList[counter-1];
-    //   var c2 = this.colorList[counter];
-    // } else {
-    //   var c1 = this.colorList[counter];
-    //   var c2 = this.colorList[counter-1];
-    // }
-
-    var output = lerpColor2(this.colorList[counter], this.colorList[counter+1], nmap, colorSpace, start_, end, type, ease);
-    return output;
-    // console.log("counter")
-    // console.log(this.colorList.length);
-    // console.log(counter)
-    // console.log(start);
+    }
+    stop = stop % (this.colorList.length-1)
+   var newLerp = map(lerpVal,lBound, hBound, 0.0,1.0)
+   var newC = lerpColor2(color(this.colorList[stop]),color(this.colorList[stop+1]),newLerp, colorSpace, start_, end, ease)
+   return newC;
   }
 
 }
+
+function multiColor(colorList, lerpVal,reps){
+   if (lerpVal > 1.0){
+     lerpVal = 1.0;
+   }
+   if (lerpVal < 0.0){
+     lerpVal = 0.0;
+   }
+  if (! reps){
+     reps = 1;
+   }
+   var stop;
+  console.log(reps)
+   var segLength = 1 / ((colorList.length-1)*reps);
+  console.log(segLength)
+
+   for (let i = 0;i< (colorList.length-1)*reps;i++){
+    var lBound = segLength * i;
+    var hBound = segLength * (i+1);
+    if (lerpVal >= lBound && lerpVal <=hBound){
+      stop = i;
+      break;
+    }
+
+    }
+    stop = stop % (colorList.length-1)
+  console.log('stop')
+  console.log(stop)
+   var newLerp = map(lerpVal,lBound, hBound, 0.0,1.0)
+   var newC = lerpColor2(color(colorList[stop]),color(colorList[stop+1]),newLerp, "MIX", null, null, LINEAR_)
+   return newC;
+ }

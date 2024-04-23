@@ -100,7 +100,7 @@ function draw() {
          endl = 1.0;
        }
        // cPalette.mapColor(curLerp, "HSLUV", null,null,QUADRATIC_)
-       var newC = cPalette.mapColor(map(json[n][i],0,255,startl,endl),cType,null,null,lType,ease); //// RGB with quadratic is also good
+       var newC = cPalette.mapColor(map(json[n][i],0,255,startl,endl),cType,null,null,lType,ease,1); //// RGB with quadratic is also good
 
        newC.setAlpha(map(json[n][i],0,255,0.0,0.5)/2)
        //stroke(0,0,0, hi.get(n)[i]/10);
