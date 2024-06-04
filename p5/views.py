@@ -3,6 +3,9 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from django.contrib.auth import authenticate, login, get_user_model
 
+from django.conf import settings
+
+ting = settings.MEDIA_ROOT
 
 def home_page(request):
     context = {

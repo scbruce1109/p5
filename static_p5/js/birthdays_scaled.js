@@ -5,7 +5,7 @@ let radius;
 let radius2;
 let angle1 = 0;
 let angle2 = 0;
-let interval = 1
+let interval = 0.3
 let accel = 0.1
 let dotColor;
 let ratio;
@@ -16,7 +16,8 @@ var scale;
 
 function setup() {
 
-  let date2 = new Date("February 11, 2000");
+  // let date2 = new Date("February 11, 2000");
+  let date2 = new Date();
   let date1 = new Date("March 16, 1955");
   // let date2 = new Date("April 9, 1991");
   // let date2 = new Date("October 4, 1991");

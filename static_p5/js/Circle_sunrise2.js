@@ -49,7 +49,7 @@ function draw() {
 //radius -=10;
   angle1 +=interval;
   // angle2 +=interval*7.4873879;
-  angle2 +=interval*43.01//+accel;  ///60.01, 31.33, 61.15, 67.1,61.77, *0.1, 65.55, 47.7!!  47.3 43.1  
+  angle2 +=interval*43.1//+accel;  ///60.01, 31.33, 61.15, 67.1,61.77, *0.1, 65.55, 47.7!!  47.3 43.1  
   radius += 0.1;
   radius2 += 0.1;
   // accel +=0.1

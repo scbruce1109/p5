@@ -1,5 +1,5 @@
 var x1,x2,y1,y2, angle, phase;
-var colorList = ["#0d1b44ff","#c62800ff","#feec01ff"];
+var colorList = ["#9c0e01ff","#fcd300ff","#6b9404ff", "#004a29ff","#002a3eff","#543224ff"];
 
 function setup(){
   createCanvas(600, 600);
@@ -23,7 +23,7 @@ function setup(){
     angle += angleSpace;
   }
 
-  var painty = new ColorWheel(colorList, width/2, height/2, 200, 10, 20)
+  var painty = new ColorWheel(colorList, width/2, height/2, 200, 50, 50)
   // painty.colorRing(0);
   // painty.colorRing(1)
   painty.display()
@@ -104,7 +104,7 @@ class ColorWheel {
       console.log(lerpV)
       var fillC = multiColor(this.colorList, lerpV)
       var yLerp = map(depth,0,this.numY,0.0,1.0)
-      var fillC2 = lerpColor2(fillC,color(360),yLerp, "MIX", null, null, LINEAR_)
+      var fillC2 = lerpColor2(fillC,color(0),yLerp, "MIX", null, null, LINEAR_)
       stroke(fillC2);
       fill(fillC2)
       daShape.display();

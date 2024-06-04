@@ -1,14 +1,14 @@
 var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette;
 
 function preload() {
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Lovers Rock - Sade.txt");
+  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Light My Fire - The Doors.txt");
 }
 
 function setup() {
-  colorMode(HSB, 360,100,100,1.0)
+  // colorMode(HSB, 360,100,100,1.0)
   // colorMode(RGB, 255,255,255,1.0)
-  scale = 9/9;
-  createCanvas(5400/9, 5400/9);
+  scale = 4;
+  createCanvas(2400, 2400);
   // background(360);
   console.log(result[0][0]);
   json = JSON.parse(result[0])
@@ -100,12 +100,14 @@ function draw() {
          endl = 1.0;
        }
        // cPalette.mapColor(curLerp, "HSLUV", null,null,QUADRATIC_)
-       var newC = cPalette.mapColor(map(json[n][i],0,255,startl,endl),cType,null,null,lType,ease,1); //// RGB with quadratic is also good
+       // var newC = cPalette.mapColor(map(json[n][i],0,255,startl,endl),cType,null,null,lType,ease,1); //// RGB with quadratic is also good
 
-       newC.setAlpha(map(json[n][i],0,255,0.0,0.5)/2)
-       //stroke(0,0,0, hi.get(n)[i]/10);
+       // var newC = color(0)
+       // newC.setAlpha(map(json[n][i],0,255,0.0,0.5))
+       // stroke(0,0,0, hi.get(n)[i]/10);
        strokeWeight(scale);
-       stroke(newC);
+       colorMode(RGB,255,255,255,255);
+       stroke(0, json[n][i]/20);
        //stroke(255);
        //ellipse(10,10,10,10);
        line(0, i/5*scale, 0, i/5*scale);

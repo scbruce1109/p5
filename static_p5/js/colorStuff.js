@@ -231,7 +231,7 @@ class colorPalette{
       }
        }
        // console.log(stop)
-       stop2 = stop % this.colorList.length;
+       var stop2 = stop % this.colorList.length;
        // console.log((stop2));
 
       return this.colorList[stop2]

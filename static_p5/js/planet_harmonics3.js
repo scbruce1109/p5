@@ -1,40 +1,26 @@
-var outScale;
-
 function preload() {
   result = loadJSON(dataURL + 'planets.json');
 }
+
+
 
 var json;
 var plist;
 
 function setup(){
-  outScale = 6;
+  createCanvas(1080,1080);
+  background(8,10,15);
+clear();
+  console.log('hey')
 
-  var d = 1080*outScale;
-  createCanvas(d,d);
-  // background(8,10,15);
-
-
-  // var p1 = "Saturn";
-  // var p2 = "Mercury";
+  var p1 = "Saturn";
+  var p2 = "Mercury";
   var detail = 1;
   var trueOrbit = false;
 
   plist = Object.values(result);
 
-  var origin = new p5.Vector(width/2, height/2);
-  var size = 457.2*outScale;
-
-  // var weight = outScale
-  // strokeWeight(outScale);
-
-  // strokeWeight(1);
-
-  strokeWeight(1);
-
-  stroke(255,150);
-
-  for (let i = 2;i<3;i++){
+  for (let i = 0;i<plist.length;i++){
     // console.log(plist[i])
     for (let p = 0;p<plist.length;p++){
     if (plist[p]["Name"] != plist[i]["Name"]){
@@ -45,28 +31,25 @@ function setup(){
         p1 = plist[i]["Name"];
         p2 = plist[p]["Name"]
       }
-      generateHarmonic(origin,size,p1,p2,detail,trueOrbit);
-      var name = p1 + "_x_" + p2 + "_" + d + "_white_" + "150" + ".png"
+      generateHarmonic(p1,p2,detail,trueOrbit);
+      var name = p1 + "_x_" + p2 + ".png"
       saveCanvas(name)
       clear();
     }
   }
   }
 
-
-
-  // generateHarmonic(origin,size,p1,p2,detail,trueOrbit);
+  // generateHarmonic(p1,p2,detail,trueOrbit);
   // saveCanvas('thing2.png')
   // clear();
 
 }
 
-function generateHarmonic(origin, size, p1, p2, detail, trueOrbit){
+function generateHarmonic(p1, p2, detail, trueOrbit){
   var planet2 = plist[plist.findIndex(item => item["Name"] === p1)]
   var planet1 = plist[plist.findIndex(item => item["Name"] === p2)]
 
-
-  // console.log(planet2);
+  console.log(planet2);
 
   // console.log(re)
 //   JSONObject planet2 = json.getJSONObject(8);
@@ -83,40 +66,35 @@ function generateHarmonic(origin, size, p1, p2, detail, trueOrbit){
 //   //float orbitRadius2 = 1.524;
   var opRatio = orbitLength2 / orbitLength1;
   var odRatio = orbitRadius2 / orbitRadius1;
-//   var circSize = 457.2;
-// //
-//   var centerPoint = 540;
+  var circSize = 457.2;
+//
+  var centerPoint = 540;
   var x1, x2;
   var y1, y2;
   var radius;
   if (trueOrbit){
-    radius = size/odRatio;
+    radius = circSize/odRatio;
   } else {
-    radius = size;
+    radius = circSize;
   }
-  var radius2 = size;
+  var radius2 = circSize;
   var angle1 = 0;
   var angle2 = 0;
   var interval = 1/detail;
   console.log(radius);
 
   for (let i=0;i<72*45*detail;i++){
-  x1 = sin(radians(angle1))*radius2+origin.x;
-  y1 = cos(radians(angle1))*radius2+origin.y;
-  x2 = sin(radians(angle2))*radius+origin.x;
-  y2 = cos(radians(angle2))*radius+origin.y;
-
-  var v1 = new p5.Vector(x1,y1);
-  var v2  = new p5.Vector(x2,y2);
-  // fill(0,10);
+  x1 = sin(radians(angle1))*radius2+centerPoint;
+  y1 = cos(radians(angle1))*radius2+centerPoint;
+  x2 = sin(radians(angle2))*radius+centerPoint;
+  y2 = cos(radians(angle2))*radius+centerPoint;
+  fill(0,10);
   // rotate(radians(5));
   // ellipse(x1, y1, 10, 10);
   // ellipse(x2, y2, 10, 10);
-
-
-  // dottedLine(v1,v2,0.2,0,outScale);
-  line(v1.x,v1.y,v2.x,v2.y);
-  // line(x1,y1,x2,y2);
+  strokeWeight(1);
+  stroke(255,30);
+  line(x1,y1,x2,y2);
 //radius -=10;
   angle1 +=interval;
   angle2 +=interval*opRatio;
