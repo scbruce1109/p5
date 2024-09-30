@@ -16,11 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from .views import home_page, array_save_view
+from p5site.views import SketchListView, SketchDetailSlugView
 from django.views import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_page, name='home'),
     path('save', array_save_view, name='save'),
+    path('sketches/', SketchListView.as_view(), name='sketches'),
+    path('sketches/<slug:slug>/', SketchDetailSlugView.as_view(), name='sketch-detail'),
     # path('files', static.serve, {'document_root': "C:/Users/bruce"}, name='files')
 ]

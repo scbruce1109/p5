@@ -92,6 +92,7 @@ class Grid {
 function averageGrid(listGrids, weightGrid){
   var rez = 100000;
   var highest;
+  //// gets highest resolution of all grid for the new average grid
   for (let i = 0;i<listGrids.length;i++){
     if (listGrids[i].spacing < rez){
       rez = listGrids[i].spacing;

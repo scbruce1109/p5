@@ -6,7 +6,7 @@ function preload() {
 
   palettes = loadTable(docsUrl + '\\Art\\colorPalettes.csv', 'csv', 'header');
 
-  img = loadImage(picsUrl + "galaxy.jpg");
+  img = loadImage(picsUrl + "CoolHermitCrabCard.jpg");
 }
 
 
@@ -56,10 +56,10 @@ function setup(){
     // var cc = zoop.getColor(ting.getValue(x,y),3);
     // var foo = map(y,0,height,0,1);
     // var cc = zoop.mapColor(foo,"HSB",null,null,null,null,20); //ting.getValue(x,y)
-    cc = color(0,random(255),200);
+    // cc = color(0,random(255),200);
     // cc.setBrightness(100);
-    cc.setAlpha(50)
-    var m = new Mover2(x,y,1,cc,random(1));
+    cc.setAlpha(10)
+    var m = new Mover2(x,y,1,cc,random(5));
     movers.push(m);
     // noStroke();
     // cc.setAlpha(0.1);

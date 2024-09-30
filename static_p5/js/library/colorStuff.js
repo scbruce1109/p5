@@ -182,6 +182,16 @@ function lerpColor2(color1,color2,lurpVal, colorSpace, start, end, type, ease){
 //     return color(Math.round(r * 255))
 // }
 
+function bumpColor(color, amount, component){
+  if (component == 'h'){
+
+  } else if (component == 's'){
+
+  } else if (component == 'v'){
+
+  }
+}
+
 
 class colorPalette{
 

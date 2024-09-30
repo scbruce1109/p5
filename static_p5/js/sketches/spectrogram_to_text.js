@@ -2,17 +2,8 @@
 
 var spectrumArray = [];
 var songNames = [
-  // "(There Is) No Greater Love - Amy Winehouse",
-  // "Essence - Wizkid ft. Tems",
-  // "Harvest Moon - Neil Young",
-  // "Let's Stay Together - Al Green",
-  "Light My Fire - The Doors",
-  // "Lovers Rock - Sade",
-  // "Satisfy My Soul - Bob Marley & The Wailers",
-  "Solitude - Billie Holiday",
-  "Something - The Beatles",
-  "Without - Sampha",
-  "You Send Me - Sam Cooke",
+  "Dance with Somebody - Mando Diao"
+
 ]
 // var textFile = null;
 var title;

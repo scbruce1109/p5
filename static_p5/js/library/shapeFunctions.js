@@ -139,3 +139,117 @@ function arcCircle(xloc, yloc, radius, numY, numX, offset){
   }
 
 }
+
+
+function polygonContainsPoint(polygonPoints, testPoint) {
+  var numVerts = polygonPoints.length;
+  var c = false;
+  var j = numVerts - 1;
+  for (let i = 0; i < numVerts; i++)     {
+    var deltaX = polygonPoints[j].x - polygonPoints[i].y;
+    var ySpread = testPoint.y - polygonPoints[i].y;
+    var deltaY = polygonPoints[j].y - polygonPoints[i].y;
+    if (((polygonPoints[i].y > testPoint.y) != (polygonPoints[j].y > testPoint.y)) &&
+        (testPoint.x < (((deltaX * ySpread) / deltaY) + polygonPoints[i].x))) {
+      c = !c;
+    }
+    j = i;
+  }
+  return c;
+}
+
+function inside(point, vs) {
+    // ray-casting algorithm based on
+    // https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
+
+    var x = point.x, y = point.y;
+
+    var inside = false;
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        var xi = vs[i].x, yi = vs[i].y;
+        var xj = vs[j].x, yj = vs[j].y;
+
+        var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+
+    return inside;
+};
+
+//https://www.algorithms-and-technologies.com/point_in_polygon/javascript
+// const pointInPolygon = function (polygon, point) {
+//     //A point is in a polygon if a line from the point to infinity crosses the polygon an odd number of times
+//     let odd = false;
+//     //For each edge (In this case for each point of the polygon and the previous one)
+//     for (let i = 0, j = polygon.length - 1; i < polygon.length; i++) {
+//         //If a line from the point into infinity crosses this edge
+//         if (((polygon[i].y > point.y) !== (polygon[j].y > point.y)) // One point needs to be above, one below our y coordinate
+//             // ...and the edge doesn't cross our Y corrdinate before our x coordinate (but between our x coordinate and infinity)
+//             && (point.x < ((polygon[j].x - polygon[i].x) * (point[1] - polygon[i][1]) / (polygon[j][1] - polygon[i][1]) + polygon[i][0]))) {
+//             // Invert odd
+//             odd = !odd;
+//         }
+//         j = i;
+
+//     }
+//     //If the number of crossings was odd, the point is in the polygon
+//     return odd;
+// };
+
+
+function pointsBB(points){
+  var l = Infinity;
+  var r = -Infinity;
+  var t = Infinity;
+  var b = -Infinity;
+
+  for (let i = 0;i<points.length;i++){
+    // ellipse(points[i].x,points[i].y,10,10)
+    console.log('hey')
+    if (points[i].x < l){
+      console.log('woo')
+      l = points[i].x;
+    }
+    if (points[i].x > r){
+      r = points[i].x;
+      console.log('bif')
+    }
+    if (points[i].y < t){
+      t = points[i].y;
+      console.log('baff')
+    }
+    if (points[i].y > b){
+      b = points[i].y;
+      console.log('wobo')
+    }
+
+  }
+  // rect(l,t,r-l,b-t)
+  // rect(l,t,200,200)
+  return [l,r,t,b];
+
+}
+
+function circumCircle(points){
+
+}
+
+function fillPoly(pPoints,numPoints){
+  var bbb = pointsBB(pPoints)
+
+  for (let i = 0;i<numPoints;i++){
+    var pp = createVector(random(bbb[0],bbb[1]),random(bbb[2],bbb[3]))
+
+    if(inside(pp,pPoints)){
+      stroke(0,0,255,50)
+      fill(200,0,0,50)
+      ellipse(pp.x,pp.y,10,10)
+    }
+
+
+  }
+}
+
+
+////// neighbor influence

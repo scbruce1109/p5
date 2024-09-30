@@ -1,14 +1,14 @@
 var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette;
 
 function preload() {
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Light My Fire - The Doors.txt");
+  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Dance with Somebody - Mando Diao.txt");
 }
 
 function setup() {
   // colorMode(HSB, 360,100,100,1.0)
   // colorMode(RGB, 255,255,255,1.0)
-  scale = 4;
-  createCanvas(2400, 2400);
+  scale = 8;
+  createCanvas(4800, 4800);
   // background(360);
   console.log(result[0][0]);
   json = JSON.parse(result[0])
@@ -107,7 +107,7 @@ function draw() {
        // stroke(0,0,0, hi.get(n)[i]/10);
        strokeWeight(scale);
        colorMode(RGB,255,255,255,255);
-       stroke(0, json[n][i]/20);
+       stroke(0, json[n][i]/12.5);
        //stroke(255);
        //ellipse(10,10,10,10);
        line(0, i/5*scale, 0, i/5*scale);

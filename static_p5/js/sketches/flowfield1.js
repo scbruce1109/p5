@@ -4,26 +4,26 @@ function setup(){
   createCanvas(600,600);
   background(255);
 
-  // var grid1 = new FlowField(0,0,20,0.01);
-  // grid1.display();
-  var g2 = new GridBasic(100,100,width-100,height-100,10);
-  g2.display();
+  var grid1 = new FlowField(0,0,20,0.01);
+  grid1.display();
+  // var g2 = new GridBasic(100,100,width-100,height-100,10);
+  // g2.display();
 
-  // for (let i = 0; i<1000;i++){
-  //   movers.push(new Mover(random(0,width),random(0,height)))
-  // }
+  for (let i = 0; i<1000;i++){
+    movers.push(new Mover(random(0,width),random(0,height)))
+  }
 
 }
 
 
-// function draw(){
-//   for (let i=0; i<movers.length; i++) {
-//     movers[i].update();
-//     movers[i].display();
-//     // movers[i].checkEdges();
-//   }
-//
-// }
+function draw(){
+  for (let i=0; i<movers.length; i++) {
+    movers[i].update();
+    movers[i].display();
+    // movers[i].checkEdges();
+  }
+
+}
 
 
 class Curve{
@@ -86,22 +86,22 @@ class FlowField {
   }
 }
 
-class GridValue {
-  constructor(x,y,size, value){
-    this.x = x;
-    this.y = y;
-    this.size = size;
-    this.v = value;
-  }
-
-  display(){
-  var angle = map(this.v, 0.0, 1.0, 0.0, TAU);
-  var v = new p5.Vector(this.x+this.size/2 * cos(angle), this.y+this.size/2 * sin(angle))
-  line(this.x, this.y, v.x, v.y);
-  // console.log(this.x + "  " + this.y + "  " + this.size + "  " + this.v)
-  }
-}
-
+// class GridValue {
+//   constructor(x,y,size, value){
+//     this.x = x;
+//     this.y = y;
+//     this.size = size;
+//     this.v = value;
+//   }
+//
+//   display(){
+//   var angle = map(this.v, 0.0, 1.0, 0.0, TAU);
+//   var v = new p5.Vector(this.x+this.size/2 * cos(angle), this.y+this.size/2 * sin(angle))
+//   line(this.x, this.y, v.x, v.y);
+//   // console.log(this.x + "  " + this.y + "  " + this.size + "  " + this.v)
+//   }
+// }
+//
 
 class Mover {
   constructor(x,y){

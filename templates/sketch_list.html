@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class='row'>
+  <div class='col-3'>
+  {% for obj in object_list %}
+  <p><a href="{{ obj.get_absolute_url }}">{{ obj.title }}</a></p>
+    {% endfor %}
+    </div>
+
+    <div class='col-6'>
+      <div class='text-align-center'>
+      <h1>Heyy</h1>
+      </div>
+      </div>
+
+      <div class='col-3'>
+        </div>
+</div>
+
+{% endblock %}

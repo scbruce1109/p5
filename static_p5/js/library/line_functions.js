@@ -1,3 +1,27 @@
+function endpointFromAngle(origin, angle, distance){
+  var x = origin.x + cos(radians(angle)) * distance;
+  var y = origin.y + sin(radians(angle)) * distance;
+  return createVector(x,y);
+}
+
+function intersectPoint(point1, point2, point3, point4) {
+   const ua = ((point4.x - point3.x) * (point1.y - point3.y) -
+             (point4.y - point3.y) * (point1.x - point3.x)) /
+            ((point4.y - point3.y) * (point2.x - point1.x) -
+             (point4.x - point3.x) * (point2.y - point1.y));
+
+  const ub = ((point2.x - point1.x) * (point1.y - point3.y) -
+             (point2.y - point1.y) * (point1.x - point3.x)) /
+            ((point4.y - point3.y) * (point2.x - point1.x) -
+             (point4.x - point3.x) * (point2.y - point1.y));
+
+  const x = point1.x + ua * (point2.x - point1.x);
+  const y = point1.y+ ua * (point2.y - point1.y);
+
+  return new p5.Vector(x,y)
+}
+
+
 function dottedLine(origin, endpoint, density, width, scale){
 
 // if (strokeWeight){
@@ -53,6 +77,50 @@ function getAngle(origin, endpoint){
   var theta = atan2(endpoint.y-origin.y, endpoint.x-origin.x);
   pop();
   return theta;
+}
+
+function customLinePerlinNoise(origin, endpoint, randomAmount, step, scale_){
+
+  if (! scale_){
+    scale_ = 1;
+  }
+
+  step = step * scale_;
+  randomAmount = randomAmount * scale_;
+
+
+  //int step = 10;
+  var lastx = -999;
+  var lasty = -999;
+  var y = origin.y;
+  var yStep;
+  var ynoise = random(10);
+
+  var distance = origin.dist(endpoint)
+  var angle = getAngle(origin,endpoint);
+  var perpAngle = angle + PI/2;
+
+  for (let i=0;i<=distance;i+=step){
+
+    var x = origin.x + cos(angle)*i;
+    var offsetPerp = noise(ynoise)*randomAmount;
+    y = origin.y + sin(angle)*i;
+    y += sin(perpAngle)*offsetPerp;
+    x += cos(perpAngle)*offsetPerp;
+
+    /// i think we need to offset by 90 degrees
+    // y = 10+noise(ynoise)*randomAmount+origin.y; /// between 10 and 210
+
+
+    if (lastx>-999){
+     line(x,y,lastx,lasty);
+   }
+
+   var offsetLine = (random(20)-10) * scale_;
+   lastx=x+cos(angle)* offsetLine;
+   lasty=y+sin(angle)*offsetLine;
+   ynoise+=01;
+  }
 }
 
 class MyLine{
