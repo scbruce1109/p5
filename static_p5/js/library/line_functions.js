@@ -71,7 +71,7 @@ function dashedLine(origin, endpoint, segments, spacer){
 
 
 function getAngle(origin, endpoint){
-  console.log(endpoint)
+  // console.log(endpoint)
   push();
   translate(origin.x, origin.y);
   var theta = atan2(endpoint.y-origin.y, endpoint.x-origin.x);
@@ -172,4 +172,52 @@ offsetPoints(amount){
     // ellipse(this.points[i][0],this.points[i][1],5,5);
   }
   }
+}
+
+function distributePointsOnLine(origin, endpoint, numPoints){
+  var d = dist(origin.x,origin.y,endpoint.x,endpoint.y);
+  var spacer = d / numPoints;
+  var a = getAngle(origin, endpoint);
+  var points = []
+
+  var xa = cos(a);
+  var ya = sin(a);
+  for (let i = 0;i<=numPoints;i++){
+    var x = origin.x + xa * i *spacer;
+    var y = origin.y + ya * i *spacer;
+    points.push(createVector(x,y))
+  }
+
+  return points
+}
+
+function distributePointsOnArc(center,radius,numPoints,startAngle,endAngle){
+  if (!startAngle){
+    startAngle = 0;
+    endAngle = 360;
+  }
+
+  var arc = Math.abs(endAngle - startAngle);
+  var spacer = arc / numPoints;
+
+  var a = startAngle;
+  var points = [];
+  for (let i = 0;i<numPoints;i++){
+    var x = center.x + cos(radians(a + i * spacer)) * radius;
+    var y = center.y + sin(radians(a + i * spacer)) * radius;
+
+    points.push(createVector(x,y))
+
+  }
+  return points;
+}
+
+function placePoint(dest, jitter, gaussian){
+  var a = radians(random(360))
+  var jit = random(-jitter,jitter)
+  var x = dest.x + cos(a)*jit;
+  var y = dest.y + sin(a)*jit;
+
+  return(createVector(x,y))
+
 }

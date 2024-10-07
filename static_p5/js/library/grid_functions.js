@@ -293,72 +293,72 @@ class GridValue {
   }
 }
 
-class Mover2 {
-  constructor(x,y, topSpeed, fillC,size_){
-    this.location = new p5.Vector(x,y);
-    this.velocity = new p5.Vector(0,0);
-    this.topSpeed = topSpeed;
-    this.mNoise = random(0,100000);
-    this.nsize = 2;
-    this.alive = true;
-    this.lifeForce = 40;
-    this.fillC = fillC;
-    this.size = size_
-  }
-
-  update(grid){
-
-    this.checkEdges(grid);
-    // this.checkAlive()
-    if (this.alive){
-    // var acceleration = sin(this.location.x * 0.01) + cos(this.location.y * 0.001) * PI *2;
-    var acceleration = grid.getAngle(this.location.x,this.location.y);
-    this.velocity.x += cos(acceleration);
-    this.velocity.y += sin(acceleration);
-    this.velocity.limit(this.topSpeed);
-    this.location.add(this.velocity);
-
-    this.display();
-    }
-    // this.mnoise += 0.01;
-    // this.msize = map(noise(this.mnoise),0, 1, 1, 50);
-    // this.msize -=10;
-  }
-
-  checkAlive(){
-    if (this.alive){
-      if (this.lifeForce <= 0){
-        this.alive = false;
-      } else {
-        this.lifeForce -= 1;
-      }
-    }
-  }
-
-  checkEdges(grid){
-    if (this.location.x > grid.width){
-      this.alive = false;
-    } else if (this.location.x < grid.xLoc){
-      this.alive = false;
-    } else if (this.location.y > grid.height){
-      this.alive = false;
-    } else if (this.location.y < grid.yLoc){
-      this.alive = false;
-    }
-  }
-
-  display(){
-    if (1 == 2){
-    // stroke(random(255),random(255),random(255),20);
-    // fill(random(255),random(255),random(255),10);
-  } else {
-    noStroke();
-    fill(this.fillC,20);
-  }
-    ellipse(this.location.x, this.location.y, this.size,this.size);
-  }
-
-}
+// class Mover2 {
+//   constructor(x,y, topSpeed, fillC,size_){
+//     this.location = new p5.Vector(x,y);
+//     this.velocity = new p5.Vector(0,0);
+//     this.topSpeed = topSpeed;
+//     this.mNoise = random(0,100000);
+//     this.nsize = 2;
+//     this.alive = true;
+//     this.lifeForce = 40;
+//     this.fillC = fillC;
+//     this.size = size_
+//   }
+//
+//   update(grid){
+//
+//     this.checkEdges(grid);
+//     // this.checkAlive()
+//     if (this.alive){
+//     // var acceleration = sin(this.location.x * 0.01) + cos(this.location.y * 0.001) * PI *2;
+//     var acceleration = grid.getAngle(this.location.x,this.location.y);
+//     this.velocity.x += cos(acceleration);
+//     this.velocity.y += sin(acceleration);
+//     this.velocity.limit(this.topSpeed);
+//     this.location.add(this.velocity);
+//
+//     this.display();
+//     }
+//     // this.mnoise += 0.01;
+//     // this.msize = map(noise(this.mnoise),0, 1, 1, 50);
+//     // this.msize -=10;
+//   }
+//
+//   checkAlive(){
+//     if (this.alive){
+//       if (this.lifeForce <= 0){
+//         this.alive = false;
+//       } else {
+//         this.lifeForce -= 1;
+//       }
+//     }
+//   }
+//
+//   checkEdges(grid){
+//     if (this.location.x > grid.width){
+//       this.alive = false;
+//     } else if (this.location.x < grid.xLoc){
+//       this.alive = false;
+//     } else if (this.location.y > grid.height){
+//       this.alive = false;
+//     } else if (this.location.y < grid.yLoc){
+//       this.alive = false;
+//     }
+//   }
+//
+//   display(){
+//     if (1 == 2){
+//     // stroke(random(255),random(255),random(255),20);
+//     // fill(random(255),random(255),random(255),10);
+//   } else {
+//     noStroke();
+//     fill(this.fillC,20);
+//   }
+//     ellipse(this.location.x, this.location.y, this.size,this.size);
+//   }
+//
+// }
 
 
 /////////////////////// Layout grids
@@ -444,7 +444,57 @@ class GridRect{
 	}
 }
 
+class GridBasic{
+  constructor(x, y, width_, height_, spacing){
+    this.x = x;
+    this.y = y;
+    this.width = width_;
+    this.height = height_;
+    this.spacing = spacing;
+    this.points = []
 
+    for (let x = this.x; x<=this.width;x+= this.spacing){
+      var row = [];
+      for (let y = this.y;y<=this.height;y+= this.spacing){
+        var xloc = x;
+        var yloc = y
+        row.push(createVector(xloc,yloc))
+  }
+  this.points.push(row)
+}
+}
+
+  display(){
+    for (let x = this.x; x<=this.width;x+= this.spacing){
+      for (let y = this.y;y<=this.height;y+= this.spacing){
+        var xloc = x;
+        var yloc = y
+        // stroke(0,40);
+        // line(xloc,yloc, xloc+this.spacing,yloc);
+        // line(xloc,yloc,xloc,yloc+this.spacing)
+        // rectMode(CENTER);
+        // fill(0)
+        // noStroke();
+        // rect(x,y,10,10);
+        // rect(x+this.spacing/2, y+this.spacing/2,10,10);
+
+        var r = random(0,4);
+        var rspace = Math.floor(random(1,4))
+        if(r < 1 ){
+          line(x,y,x+this.spacing*rspace,y+this.spacing*rspace)
+        } else if(r < 2) {
+          line(x+this.spacing*rspace, y, x, y+this.spacing*rspace);
+        } else if (r < 3){
+          line(x, y, x, y+this.spacing*rspace);
+        } else if (r < 4){
+          line(x, y, x+this.spacing*rspace, y);
+        }
+
+      }
+    }
+  }
+
+}
 
 // class Grid {
 //   // var xOff, yOff, spacing, rez;

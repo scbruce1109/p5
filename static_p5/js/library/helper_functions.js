@@ -14,7 +14,11 @@ function keyTyped() {
     clear();
   } else if (key === 'd') {
     redraw();
-  }
+  } else if (key === 'f') {
+    let fs = fullscreen();
+    fullscreen(!fs);
+
+}
   // uncomment to prevent any default behavior
   return false;
 }

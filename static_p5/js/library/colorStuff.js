@@ -182,13 +182,60 @@ function lerpColor2(color1,color2,lurpVal, colorSpace, start, end, type, ease){
 //     return color(Math.round(r * 255))
 // }
 
-function bumpColor(color, amount, component){
-  if (component == 'h'){
+function bumpColor(c, bList){
+  var h,s,b,a;
+  if (!bList[0]){
+    h = 0;
+  } else {
+    h = bList[0]
+  }
+  if (!bList[1]){
+    s = 0;
+  } else {
+    s = bList[1]
+  }
+  if (!bList[2]){
+    b = 0;
+  } else {
+    b = bList[2]
+  }
+  if (!bList[3]){
+    a = 0;
+  } else {
+    a = bList[3]
+  }
 
-  } else if (component == 's'){
+  return color(hue(c)+h,saturation(c)+s,brightness(c)+b,alpha(c)+a)
 
-  } else if (component == 'v'){
+}
 
+function jitterColor(c, jList, gaussian){
+  var h,s,b,a;
+  if (!jList[0]){
+    h = 0;
+  } else {
+    h = jList[0]
+  }
+  if (!jList[1]){
+    s = 0;
+  } else {
+    s = jList[1]
+  }
+  if (!jList[2]){
+    b = 0;
+  } else {
+    b = jList[2]
+  }
+  if (!jList[3]){
+    a = 0;
+  } else {
+    a = jList[3]
+  }
+
+  if (gaussian){
+    return bumpColor(c,[randomGaussian(0,h/3),randomGaussian(0,s/3),randomGaussian(0,b/3),randomGaussian(0,a/3)])
+  } else {
+  return bumpColor(c,[random(-h,h),random(-s,s),random(-b,b),random(-a,a)])
   }
 }
 
@@ -309,3 +356,35 @@ function multiColor(colorList, lerpVal,reps){
    var newC = lerpColor2(color(colorList[stop]),color(colorList[stop+1]),newLerp, "MIX", null, null, LINEAR_)
    return newC;
  }
+
+
+
+function mixColors(colors,weights){
+  colorMode(RGB,255,255,255,1.0)
+  zs = []
+  for (let i = 0;i<colors.length;i++){
+  var r1 = red(colors[i]);
+  var g1 = green(colors[i]);
+  var b1 = blue(colors[i]);
+
+  var rgb1 = "rgb(" + r1.toString() + ", " + g1.toString() + ", " + b1.toString() + ")";
+  var z1 = mixbox.rgbToLatent(rgb1)
+
+  zs.push(z1)
+}
+
+var zMix = new Array(mixbox.LATENT_SIZE);
+
+
+for (var i = 0; i < zMix.length; i++) {
+  var mix = 0;// mix:
+    for (let j = 0;j<zs.length;j++){
+      mix += zs[j][i] * weights[j];
+    }
+    zMix[i] = mix;
+  }
+var rgbMix = mixbox.latentToRgb(zMix);
+// console.log('clrlr')
+// console.log(rgbMix)
+return color(rgbMix[0],rgbMix[1],rgbMix[2])
+}
