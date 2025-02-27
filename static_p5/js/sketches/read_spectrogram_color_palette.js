@@ -1,14 +1,26 @@
-var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette;
+var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette, cVals;
+
+// var cp = ["#515e67","#f1e0ac",'#ff9c5e',"#515e67"]
+
+var cp = [
+  '#35402c',
+  '#f0d840',
+  '#df6b2e',
+  '#9e151c',
+  '#4f111c',
+  '#2b4866',
+  '#35402c',
+]
 
 function preload() {
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Roxanne - The Police.txt");
+  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\I've Got a Crush On You - Ella Fitzgerald.txt");
 }
 
 function setup() {
   // colorMode(HSB, 360,100,100,1.0)
   // colorMode(RGB, 255,255,255,1.0)
-  scale = 7;
-  createCanvas(4200, 4200);
+  scale = 1;
+  createCanvas(600, 600);
   // background(360);
   console.log(result[0][0]);
   json = JSON.parse(result[0])
@@ -37,25 +49,26 @@ function setup() {
   var curLerp = 0;
   var steps = 100;
   noStroke();
-  // for (let i =0;i<steps;i++){
-  //
-  //   //// regular hsb lerp
-  //   // colorMode(HSB,360,100,100,1.0);
-  //   var y = height - 20;
-  //   fill(cPalette.mapColor(curLerp, cType, null,null,lType, ease))
-  //   rect(x,y,width/steps,20);
-  //   y -=20;
-  //
-  //   fill(cPalette.mapColor(curLerp, cType, null,null,LINEAR_, null))
-  //   rect(x,y,width/steps,20);
-  //   y -=20;
-  //
-  //   x += width/steps;
-  //   curLerp += 1/(steps-1);
-  //   // console.log(curLerp)
-  //
-  // }
+
 colorMode(HSB, 360,100,100,1.0)
+cVals = [];
+// for (let i = 0;i< json[n].length;i++){
+//   // var a = 360 / json[n].length;
+//   var curlLerp = map(i,0,json[n].length,0,1)
+//   var strokeC = multiColor(cp,curlLerp)
+//   cVals.push(strokeC);
+// }
+
+// console.log('j')
+
+for (let i = 0;i< json.length;i++){
+  // var a = 360 / json[n].length;
+  var curlLerp = map(i,0,json.length,0,1)
+  var strokeC = multiColor(cp,curlLerp)
+  cVals.push(strokeC);
+}
+
+
 }
 
 function draw() {
@@ -107,7 +120,13 @@ function draw() {
        // stroke(0,0,0, hi.get(n)[i]/10);
        strokeWeight(scale);
        colorMode(RGB,255,255,255,255);
-       stroke(0, json[n][i]/7.5);
+
+       // strokeC.setAlpha(json[n][i]/7.5)
+       // strokeC.setAlpha(map(json[n][i],0,255,0.0,1))
+        colorMode(RGB,255,255,255,255);
+        var sc = cVals[n]
+        sc.setAlpha(json[n][i]/10)
+       stroke(sc);
        //stroke(255);
        //ellipse(10,10,10,10);
        line(0, i/5*scale, 0, i/5*scale);

@@ -18,6 +18,9 @@ from django.urls import path, re_path
 from .views import home_page, array_save_view
 from p5site.views import SketchListView, SketchDetailSlugView
 from django.views import static
+from p5.sketch_utils import sketch_to_model
+
+sketch_to_model()
 
 urlpatterns = [
     path('admin/', admin.site.urls),

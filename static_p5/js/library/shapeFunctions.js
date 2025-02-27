@@ -1,43 +1,4 @@
-// function setup() {
-//   createCanvas(600, 600);
-//   ellipse(width/2,height/2,20,20)
-//
-//   var points = generatePoints(width/2,height/2,200,200,3,0)
-//   var arcP = generateArc(width/2,height/2,200,150,10,-5)
-//   var arcP2 = generateArc(width/2,height/2,200,150,10,90-5)
-//
-//   var tx = width/2 + cos(radians(-90))*200;
-//   var ty = height/2 + sin(radians(-90))*200;
-//   // ellipse(tx,ty,20,20)
-//
-//   line(width/2,0,width/2,height)
-//   line(0,height/2,width,height/2)
-//
-//   noStroke();
-//   fill(0)
-//
-// //   var shape1 = new myShape(arcP2);
-// //   shape1.display()
-//
-// //   var shape2 = new myShape(arcP);
-// //   shape2.display()
-//
-//   var ting = arcRing(width/2,height/2,200,100,2,0,20)
-//
-//   var zing = arcCircle(width/2,height/2,200,10,60);
-//
-//
-//
-//   // for (let i=0;i<points.length;i++){
-//   //   ellipse(points[i].x,points[i].y,20,20)
-//   // }
-//
-// }
-//
-// function draw() {
-//   // background(220);
-//
-// }
+
 
 function generatePoints(xloc, yloc, xsize, ysize, numVerts, offset){
   var pList = [];
@@ -81,7 +42,6 @@ function generateArc(xloc, yloc, rad1, rad2, angle, offsetAngle){
 class myShape {
   constructor(pointsList){
     this.points = pointsList;
-
   }
 
   display(){
@@ -99,19 +59,19 @@ function ringArcs(locx, locy, radius1, radius2, numSegs, spacer){
 
 }
 
-function arcRing(xloc, yloc, radius1, radius2, numVerts, offset, angle){
+function arcRing(xloc, yloc, radius1, radius2, numVerts, offset, angle,fillC){
   var pList = [];
   if (! offset){
     offset = 0;
   }
-  offset = offset - 90;
+  offset = offset;
   var spacing = 360 / numVerts;
 
   for (let i=0;i<numVerts;i++){
-    var theta = i*spacing+offset
-    var daArc = generateArc(xloc,yloc,radius1,radius2,angle,(360-theta-90)-angle/2)
+    var theta = -i*spacing+offset
+    var daArc = generateArc(xloc,yloc,radius1,radius2,angle,theta-angle/2)
     var daShape = new myShape(daArc);
-    fill(random(255));
+    fill(fillC);
     daShape.display();
     // var x = xloc + cos(radians(i*spacing+offset)) * xsize;
     // var y = yloc + sin(radians(i*spacing+offset)) * ysize;
@@ -251,5 +211,226 @@ function fillPoly(pPoints,numPoints){
   }
 }
 
+
+function translateMatrix(x,y,z){
+  var t = math.matrix([[1, 0, 0, x], [0, 1,0, y], [0, 0, 1,z],[0,0,0,1]])
+  return t
+}
+
+function rotateMatrix(angle, axis){
+  var r;
+  if (axis == 'x'){
+    r = math.matrix([[1, 0, 0,0],[0,cos(angle), -sin(angle),0], [0,sin(angle), cos(angle),0], [0,0,0,1]])
+
+  } else if (axis == 'y'){
+  r = math.matrix([[cos(angle), 0, sin(angle),0], [0, 1, 0,0], [-sin(angle), 0, cos(angle),0], [0,0,0,1]])
+  } else {
+  r = math.matrix([[cos(angle), -sin(angle), 0,0], [sin(angle), cos(angle), 0,0], [0, 0, 1,0],[0,0,0,1]])
+  }
+  // var r = math.multiply(z,y);
+  // r = math.multiply()
+  return r;
+}
+
+function rotateAroundPoint(pointVector, angle, axis){
+  // var pMatrix = [vector.x,vector.y,1]
+  // var transformed = math.multiply(translateMatrix(-pointVector.x,-pointVector.y), pMatrix)
+  var rotated = math.multiply(rotateMatrix(angle, axis),translateMatrix(-pointVector.x,-pointVector.y,-pointVector.z))
+  var final = math.multiply(translateMatrix(pointVector.x,pointVector.y,pointVector.z), rotated)
+  // var t = math.matrix([[1, 0, 7], [2, 5, 8], [3, 6, 9]])
+  return final;
+}
+
+function applyM(p,transMatrix){
+  var pMatrix = [p.x,p.y,p.z,1]
+  var transformed = math.multiply(transMatrix, pMatrix)
+  // console.log('transformed')
+  // console.log(transformed)
+  return createVector(transformed.get([0]),transformed.get([1]),transformed.get([2]))
+}
+
+class Mesh {
+  constructor(centerPoint, verts, dMode){
+    this.verts = verts;
+    this.pVerts = [];
+    this.edges = [];
+    this.faces = [];
+    this.center = centerPoint;
+    this.displayMode = dMode
+  }
+
+  display(mode,projected,fillC,strokeC){
+    if (!mode){
+      mode = this.displayMode;
+    }
+    mode = this.displayMode;
+    // if
+    var verts;
+    // if(projected){
+      verts = this.pVerts;
+    // } else {
+    //   verts = this.verts;
+    // }
+    if (mode == 'p'){
+      stroke(0)
+      for (let i = 0;i<verts.length;i++){
+        point(verts[i].x,verts[i].y)
+      }
+    } else if (mode == 'e'){
+
+      stroke(0,100)
+      for (let i = 0;i<this.edges.length;i++){
+        // var zz = map(this.verts[index[1].z,this.centerPoin.z,])
+        var index = this.edges[i];
+        // console.log(index)
+        line(verts[index[0]].x,verts[index[0]].y,verts[index[1]].x,verts[index[1]].y)
+      }
+      } else if (mode == 'f'){
+        noStroke();
+        fill(fillC);
+      for (let i = 0;i<this.faces.length;i++){
+        beginShape();
+
+        for (let i = 0;i<verts.length;i++){
+        vertex(verts[i].x,verts[i].y)
+      }
+
+
+  endShape(CLOSE);
+
+      }
+    }
+  }
+
+  project(cam){
+    this.pVerts = [];
+    for (let i = 0;i<this.verts.length;i++){
+        var pP = cam.pointInPerspective(this.verts[i])
+        this.pVerts.push(pP);
+      }
+  }
+
+
+  rotateMesh(angle, axis, p){
+    if (!p){
+      p = this.center
+    }
+    var rotMatrix = rotateAroundPoint(p, angle, axis);
+    for (let i =0;i<this.verts.length;i++){
+      this.verts[i] = applyM(this.verts[i],rotMatrix);
+    }
+    this.center = applyM(this.center,rotMatrix)
+  }
+  translateMesh(x,y,z){
+    var tMatrix = translateMatrix(x,y,z);
+    for (let i =0;i<this.verts.length;i++){
+      this.verts[i] = applyM(this.verts[i],tMatrix);
+    }
+    this.center = applyM(this.center,tMatrix)
+  }
+
+}
+
+function makeRect(center,width_,height_,dMode){
+  var ps = [
+    createVector(center.x - width_/2,center.y - height_/2),
+    createVector(center.x + width_/2,center.y - height_/2),
+    createVector(center.x + width_/2,center.y + height_/2),
+    createVector(center.x - width_/2,center.y + height_/2),
+  ]
+  var rec = new Mesh(center,ps,dMode)
+  rec.edges = [
+    [0,1],
+    [1,2],
+    [2,3],
+    [3,0]
+  ]
+  rec.faces = [[0,1,2,3]]
+  // rec.display('e')
+  return rec;
+}
+
+
+function makeBox(center,width_,height_,girth,dmode){
+  var ps = [
+    createVector(center.x - width_/2,center.y - height_/2,center.z + girth/2),
+    createVector(center.x + width_/2,center.y - height_/2,center.z + girth/2),
+    createVector(center.x + width_/2,center.y + height_/2,center.z + girth/2),
+    createVector(center.x - width_/2,center.y + height_/2,center.z + girth/2),
+    createVector(center.x - width_/2,center.y - height_/2,center.z - girth/2),
+    createVector(center.x + width_/2,center.y - height_/2,center.z - girth/2),
+    createVector(center.x + width_/2,center.y + height_/2,center.z - girth/2),
+    createVector(center.x - width_/2,center.y + height_/2,center.z - girth/2),
+  ]
+  var boxx = new Mesh(center,ps,dmode)
+  boxx.edges = [
+    [0,1],
+    [1,2],
+    [2,3],
+    [3,0],
+    [0,4],
+    [1,5],
+    [2,6],
+    [3,7],
+    [4,5],
+    [5,6],
+    [6,7],
+    [7,4]
+  ]
+  boxx.faces = [[0,1,2,3]]
+  // rec.display('e')
+  return boxx;
+}
+
+function makeArray(meshArray,space,num, axis){
+  // if (!numX){
+  //   numX = 0;
+  // }
+  // if (!numY){
+  //   numY = 0;
+  // }
+  // if (!numZ){
+  //   numZ = 0;
+  // }
+
+  arrayMeshes = [];
+
+  for (let i = 0;i<num;i++){
+    for (let j = 0;j<meshArray.length;j++){
+    var meshCopy = new Mesh(meshArray[j].center.copy(),meshArray[j].verts.slice(),meshArray[j].displayMode);
+
+    meshCopy.edges = meshArray[j].edges
+    meshCopy.faces = meshArray[j].faces
+    if (axis == 'x'){
+      meshCopy.translateMesh(space*(i+1),0,0);
+    } else if (axis == 'y'){
+      meshCopy.translateMesh(0,space*(i+1),0)
+    } else {
+      meshCopy.translateMesh(0,0,space*(i+1))
+    }
+
+    arrayMeshes.push(meshCopy)
+  }
+}
+
+  // for (let i = 0;i<numY;i++){
+  //   var meshCopy = new Mesh(mesh.center.copy(),mesh.verts.slice(),mesh.displayMode);
+  //   meshCopy.edges = mesh.edges
+  //   meshCopy.faces = mesh.faces
+  //   meshCopy.translateMesh(0,space*(i+1),0);
+  //   arrayMeshes.push(meshCopy)
+  // }
+  //
+  // for (let i = 0;i<numZ;i++){
+  //   var meshCopy = new Mesh(mesh.center.copy(),mesh.verts.slice(),mesh.displayMode);
+  //   meshCopy.edges = mesh.edges
+  //   meshCopy.faces = mesh.faces
+  //   meshCopy.translateMesh(0,0,space*(i+1));
+  //   arrayMeshes.push(meshCopy)
+  // }
+
+  return arrayMeshes;
+
+}
 
 ////// neighbor influence

@@ -6,15 +6,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.js"></script> -->
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.js"></script>
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.dom.js"></script>
     <script src='{% static "OneDrive/Documents/Art/Processing/p5/static_p5/js/library/hsluv.min.js" %}'></script>
     <script src='{% static "OneDrive/Documents/Art/Processing/p5/static_p5/js/library/mixbox.js" %}'></script>
+    <script src="{% static 'OneDrive/Documents/Art/Processing/p5/static_p5/js/jscolor.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
     {% include 'base/js.html' %}
-    <link rel="stylesheet" type="text/css" href='{% static "css/style.css" %}'>
+    <link rel="stylesheet" type="text/css" href='{% static "OneDrive/Documents/Art/Processing/p5/static_p5/css/style.css" %}'>
     <meta charset="utf-8" />
 
   </head>
-  <body style="background-color:black">
+  <body style="background-color:white">
     <main>
+      {% if object.has_buttons %}
+      {% with "sketches/"|add:object.title|add:".html" as template %}
+      {% include template %}
+      {% endwith %}
+
+      {% endif %}
       <!-- <button id = "audio" onclick = "toggleAudio()">Play</button>
       <button onclick = "saveCanvas('SS', 'png')">Save</button> -->
     </main>
@@ -38,7 +47,10 @@ var dataURL = "{% static 'OneDrive/Documents/Art/Processing/p5/static_p5/data/' 
     <script src='{% static "OneDrive/Documents/Art/Processing/p5/static_p5/js/library/colorStuff.js" %}'></script>
     <script src='{% static "OneDrive/Documents/Art/Processing/p5/static_p5/js/library/moverStuff.js" %}'></script>
     <script src='{% static "OneDrive/Documents/Art/Processing/p5/static_p5/js/library/compFunctions.js" %}'></script>
-
+    <script src='{% static "OneDrive/Documents/Art/Processing/p5/static_p5/js/library/perspectiveStuff.js" %}'></script>
+    {% if not object.has_buttons %}
+    <script src='{% static "OneDrive/Documents/Art/Processing/p5/static_p5/js/library/keyFuncs.js" %}'></script>
+    {% endif %}
     <script src='{% static "OneDrive/Documents/Art/Processing/p5/static_p5/js/library/helper_functions.js" %}'></script>
     <script src='{% static "OneDrive/Documents/Art/Processing/p5/static_p5/js/library/shapeFunctions.js" %}'></script>
     <!-- <script src='{% static "js/circle_sunrise2.js" %}'></script> -->

@@ -10,7 +10,7 @@ function setup(){
   // g2.display();
 
   for (let i = 0; i<1000;i++){
-    movers.push(new Mover(random(0,width),random(0,height)))
+    movers.push(new MoverGuy(random(0,width),random(0,height)))
   }
 
 }
@@ -26,35 +26,35 @@ function draw(){
 }
 
 
-class Curve{
-  constructor(startX, startY, numSteps, xoff, yoff, stepLength){
-    this.x = startX;
-    this.y = startY;
-    this.xOff = xoff;
-    this.yOff = yoff;
-    this.numSteps = numSteps;
-    this.stepLength = stepLength;
-  }
-
-  drawCurve(grid, hue){
-    beginShape();
-    noFill();
-    stroke(hue,80,50,0.1);
-    strokeWeight(2);
-
-    for (let i = 0;i<numSteps;i++){
-      // if (x>width || x<0)
-
-      vertex(x,y);
-      var gridAngle = grid.getAngle(x,y);
-      var xStep = stepLength * cos(gridAngle);
-      var yStep = stepLength * sin(gridAngle);
-      x += xStep;
-      y += yStep;
-    }
-    endShape();
-  }
-}
+// class Curve{
+//   constructor(startX, startY, numSteps, xoff, yoff, stepLength){
+//     this.x = startX;
+//     this.y = startY;
+//     this.xOff = xoff;
+//     this.yOff = yoff;
+//     this.numSteps = numSteps;
+//     this.stepLength = stepLength;
+//   }
+//
+//   drawCurve(grid, hue){
+//     beginShape();
+//     noFill();
+//     stroke(hue,80,50,0.1);
+//     strokeWeight(2);
+//
+//     for (let i = 0;i<numSteps;i++){
+//       // if (x>width || x<0)
+//
+//       vertex(x,y);
+//       var gridAngle = grid.getAngle(x,y);
+//       var xStep = stepLength * cos(gridAngle);
+//       var yStep = stepLength * sin(gridAngle);
+//       x += xStep;
+//       y += yStep;
+//     }
+//     endShape();
+//   }
+// }
 
 class FlowField {
   constructor(xOff, yOff, spacing, rez){
@@ -103,7 +103,7 @@ class FlowField {
 // }
 //
 
-class Mover {
+class MoverGuy {
   constructor(x,y){
     this.location = new p5.Vector(x,y);
     this.velocity = new p5.Vector(0,0);
@@ -132,43 +132,43 @@ class Mover {
 }
 
 
-class GridBasic{
-  constructor(x, y, width_, height_, spacing){
-    this.x = x;
-    this.y = y;
-    this.width = width_;
-    this.height = height_;
-    this.spacing = spacing;
-  }
+// class GridBasic{
+//   constructor(x, y, width_, height_, spacing){
+//     this.x = x;
+//     this.y = y;
+//     this.width = width_;
+//     this.height = height_;
+//     this.spacing = spacing;
+//   }
+//
+//   display(){
+//     for (let x = this.x; x<=this.width;x+= this.spacing){
+//       for (let y = this.y;y<=this.height;y+= this.spacing){
+//         var xloc = x;
+//         var yloc = y
+//         stroke(0,40);
+//         // line(xloc,yloc, xloc+this.spacing,yloc);
+//         // line(xloc,yloc,xloc,yloc+this.spacing)
+//         // rectMode(CENTER);
+//         // fill(0)
+//         // noStroke();
+//         // rect(x,y,10,10);
+//         // rect(x+this.spacing/2, y+this.spacing/2,10,10);
+//
+//         var r = random(2,4);
+//         var rspace = Math.floor(random(1,4))
+//         if(r < 1 ){
+//           line(x,y,x+this.spacing*rspace,y+this.spacing*rspace)
+//         } else if(r < 2) {
+//           line(x+this.spacing*rspace, y, x, y+this.spacing*rspace);
+//         } else if (r < 3){
+//           line(x, y, x, y+this.spacing*rspace);
+//         } else if (r < 4){
+//           line(x, y, x+this.spacing*rspace, y);
+//         }
+//
+//       }
+//     }
+//   }
 
-  display(){
-    for (let x = this.x; x<=this.width;x+= this.spacing){
-      for (let y = this.y;y<=this.height;y+= this.spacing){
-        var xloc = x;
-        var yloc = y
-        stroke(0,40);
-        // line(xloc,yloc, xloc+this.spacing,yloc);
-        // line(xloc,yloc,xloc,yloc+this.spacing)
-        // rectMode(CENTER);
-        // fill(0)
-        // noStroke();
-        // rect(x,y,10,10);
-        // rect(x+this.spacing/2, y+this.spacing/2,10,10);
-
-        var r = random(2,4);
-        var rspace = Math.floor(random(1,4))
-        if(r < 1 ){
-          line(x,y,x+this.spacing*rspace,y+this.spacing*rspace)
-        } else if(r < 2) {
-          line(x+this.spacing*rspace, y, x, y+this.spacing*rspace);
-        } else if (r < 3){
-          line(x, y, x, y+this.spacing*rspace);
-        } else if (r < 4){
-          line(x, y, x+this.spacing*rspace, y);
-        }
-
-      }
-    }
-  }
-
-}
+// }

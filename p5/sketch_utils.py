@@ -13,7 +13,7 @@ def sketch_to_model():
             if filename.split('.')[1] == 'js':
 
                 sketch_obj, created = Sketch.objects.new_or_get(filename.split('.')[0])
-                print(filename.split('.')[0] + " created " + str(created))
+                # print(filename.split('.')[0] + " created " + str(created))
 
         except:
             print('attempt failed for '+filename)

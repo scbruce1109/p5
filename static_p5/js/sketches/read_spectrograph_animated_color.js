@@ -1,15 +1,16 @@
 var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette;
 
 function preload() {
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\I've Got a Crush On You - Ella Fitzgerald.txt");
+  // result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\It's Possible - Piero Piccioni.txt");
+  result = loadStrings(dataURL + "It's Possible - Piero Piccioni.txt");
 }
 
 function setup() {
   // colorMode(HSB, 360,100,100,1.0)
   // colorMode(RGB, 255,255,255,1.0)
-  scale = 4;
-  createCanvas(2400, 2400);
-  // background(360);
+  scale = 1;
+  createCanvas(600, 600);
+  // background(0);
   console.log(result[0][0]);
   json = JSON.parse(result[0])
   console.log(json[6][10])
@@ -23,14 +24,14 @@ function setup() {
   // color2 = color("#FF6600");
   color1 = color("#3f434c"); /// 00d5ff    ffce13    1e3d2a
   color2 = color("#fe5322");
-  hexList = ["#112d46", "#a92d45"]
+  hexList = ["#181778", "#FF6600"]
   cPalette = new colorPalette(hexList);
   cPalette.mapColor(1.0);
 
-  cType = "MIX";
-  lType = SINUSOIDAL_;
+  cType = "HSB";
+  lType = QUADRATIC_;
   ease = null;
-  flip = true;
+  flip = false;
 
   var x = 0;
 

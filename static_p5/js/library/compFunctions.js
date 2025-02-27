@@ -68,6 +68,41 @@ function idwWeights(p1, listp, radius, w, rev){
    return weights;
 }
 
+function idw2(samplePoint, listKnownPoints, radius, w, defaultVal){
+  var inverseDistances = []
+  var percentagesDefault = [];
+  var massWeights = [];
+  for (let i = 0;i < listKnownPoints.length;i++){
+    var d = samplePoint.dist(listKnownPoints[i]);
+    if (d < radius){
+      if (d != 0){
+      inverseDistances.push(1/d)
+      if (defaultVal){
+        percentagesDefault.push(d/radius)
+      }
+    }
+    }
+  }
+
+  var weights = [];
+  var sumDistances = calcSum(inverseDistances)
+
+    if (defaultVal){
+      var defaultWeight = 0;
+      for (let i = 0;i<inverseDistances.length;i++){
+        weights.push(inverseDistances[i]/sumDistances*(1-percentagesDefault[i]))
+        defaultWeight += inverseDistances[i]/sumDistances * percentagesDefault[i]
+    }
+    weights.push(defaultWeight)
+    } else {
+    for (let i = 0;i<inverseDistances.length;i++){
+      weights.push(inverseDistances[i]/sumDistances)
+  }
+  }
+
+  return weights;
+}
+
 
 function getProbability(listProbs){
   var randomProb = random(0,1);
@@ -90,4 +125,24 @@ function getProbability(listProbs){
 function chooseVal(listProbs){
   var max = listProbs.reduce((a, b) => Math.max(a, b), -Infinity);
   return listProbs.indexOf(max)
+}
+
+function randomOffset(point, amount, angle){
+  if (! angle){
+  angle = random(0,360);
+  }
+  amount = random(-amount,amount)
+  var x = point.x + cos(radians(angle)) * amount;
+  var y = point.y + sin(radians(angle)) * amount;
+  return createVector(x,y);
+}
+
+function gaussianOffset(point, stdv, angle){
+  if (! angle){
+  angle = random(0,360);
+  }
+  amount = randomGaussian(0,amount/3)
+  var x = point.x + cos(radians(angle)) * amount;
+  var y = point.y + sin(radians(angle)) * amount;
+  return createVector(x,y);
 }

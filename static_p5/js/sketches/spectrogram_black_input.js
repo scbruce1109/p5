@@ -1,28 +1,31 @@
 var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette;
 
-function preload() {
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Roxanne - The Police.txt");
-}
+// function preload() {
+//   result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Roxanne - The Police.txt");
+// }
 
 function setup() {
   // colorMode(HSB, 360,100,100,1.0)
   // colorMode(RGB, 255,255,255,1.0)
-  scale = 7;
-  createCanvas(4200, 4200);
-  // background(360);
-  console.log(result[0][0]);
-  json = JSON.parse(result[0])
-  console.log(json[6][10])
+  scale = 1;
+  createCanvas(600, 600);
 
-  a = 360 / json.length;
+
+  a = 360 / 5000;
   // print(360/2831);
   b = 0;
   n = 0;
 
-  // color1 = color("#181778");
-  // color2 = color("#FF6600");
-  color1 = color("#3f434c");
-  color2 = color("#fe5322");
+  // Create an Audio input
+  mic = new p5.AudioIn();
+
+  // start the Audio Input.
+  // By default, it does not .connect() (to the computer speakers)
+  mic.start();
+  fft = new p5.FFT();
+  fft.setInput(mic)
+
+
   hexList = ["#181778", "#FF6600"]
   cPalette = new colorPalette(hexList);
   cPalette.mapColor(1.0);
@@ -37,29 +40,15 @@ function setup() {
   var curLerp = 0;
   var steps = 100;
   noStroke();
-  // for (let i =0;i<steps;i++){
-  //
-  //   //// regular hsb lerp
-  //   // colorMode(HSB,360,100,100,1.0);
-  //   var y = height - 20;
-  //   fill(cPalette.mapColor(curLerp, cType, null,null,lType, ease))
-  //   rect(x,y,width/steps,20);
-  //   y -=20;
-  //
-  //   fill(cPalette.mapColor(curLerp, cType, null,null,LINEAR_, null))
-  //   rect(x,y,width/steps,20);
-  //   y -=20;
-  //
-  //   x += width/steps;
-  //   curLerp += 1/(steps-1);
-  //   // console.log(curLerp)
-  //
-  // }
+
 colorMode(HSB, 360,100,100,1.0)
 }
 
 function draw() {
   // var n = 0;
+  var spectrumA = fft.analyze()
+  var spectrumB = spectrumA.reverse()
+  // spectrumB.splice(0, 10)
 
   push();
       translate(width/2, height/2);
@@ -68,10 +57,10 @@ function draw() {
       //print(max(tingb)+ "    ");
       //print(log(max(tingb))+"    ");
       // var newC = color(random(360),80,80)
-      for (let i = 0;i< json[n].length;i++){
+      for (let i = 0;i< spectrumB.length;i++){
         //print("hey");
         stroke(255);
-        var val = json[n][i];
+        var val = spectrumB[i];
         //print(int(val));
         //print(val + "     ");
         //line(random(width),random(height),random(width),random(height));
@@ -107,7 +96,7 @@ function draw() {
        // stroke(0,0,0, hi.get(n)[i]/10);
        strokeWeight(scale);
        colorMode(RGB,255,255,255,255);
-       stroke(0, json[n][i]/7.5);
+       stroke(0, spectrumB[i]/7.5);
        //stroke(255);
        //ellipse(10,10,10,10);
        line(0, i/5*scale, 0, i/5*scale);
@@ -116,7 +105,7 @@ function draw() {
     //print(b + "    ");
 
     pop();
-    n++;
+    // n++;
 
 
 

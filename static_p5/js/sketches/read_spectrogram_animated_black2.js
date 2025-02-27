@@ -1,14 +1,18 @@
 var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette;
 
 function preload() {
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Roxanne - The Police.txt");
+  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Easy - Alannah McCready.txt");
 }
+
+Array.prototype.max = function() {
+  return Math.max.apply(null, this);
+};
 
 function setup() {
   // colorMode(HSB, 360,100,100,1.0)
   // colorMode(RGB, 255,255,255,1.0)
-  scale = 7;
-  createCanvas(4200, 4200);
+  scale = 1;
+  createCanvas(600, 600);
   // background(360);
   console.log(result[0][0]);
   json = JSON.parse(result[0])
@@ -107,7 +111,9 @@ function draw() {
        // stroke(0,0,0, hi.get(n)[i]/10);
        strokeWeight(scale);
        colorMode(RGB,255,255,255,255);
-       stroke(0, json[n][i]/7.5);
+       var max = json[n].max();
+       var w = map(json[n][i],0,max,0,255)
+       stroke(0, w/6.5);
        //stroke(255);
        //ellipse(10,10,10,10);
        line(0, i/5*scale, 0, i/5*scale);

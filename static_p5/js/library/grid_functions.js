@@ -7,7 +7,7 @@ function drawGrid(xoff, yoff, width, height, divisionsX, divisionsY, scale){
     else {
     stroke(0);
     }
-    // line(xoff+width/divisionsY*i, yoff, xoff+width/divisionsY*i,yoff+height);
+    line(xoff+width/divisionsY*i, yoff, xoff+width/divisionsY*i,yoff+height);
     dottedLine(new p5.Vector(xoff+width/divisionsY*i, yoff), new p5.Vector(xoff+width/divisionsY*i,yoff+height), 0.3);
     // dashedLine(new p5.Vector(xoff+width/divisionsY*i, yoff), new p5.Vector(xoff+width/divisionsY*i,yoff+height), int(random(5,15)), 20);
   }
@@ -19,13 +19,13 @@ function drawGrid(xoff, yoff, width, height, divisionsX, divisionsY, scale){
     else {
     stroke(0);
     }
-    // line(xoff, yoff+height/divisionsY*i, xoff+width,yoff+height/divisionsY*i);
+    line(xoff, yoff+height/divisionsY*i, xoff+width,yoff+height/divisionsY*i);
     dottedLine(new p5.Vector(xoff, yoff+height/divisionsY*i), new p5.Vector(xoff+width,yoff+height/divisionsY*i), 0.3);
     // dashedLine(new p5.Vector(xoff, yoff+height/divisionsY*i), new p5.Vector(xoff+width,yoff+height/divisionsY*i),int(random(5,15)), 20);
   }
 }
 
-class Grid {
+class OldestGrid {
   // var xOff, yOff, spacing, rez;
   // ArrayList<ArrayList<GridRect>> grid;
 
@@ -453,9 +453,9 @@ class GridBasic{
     this.spacing = spacing;
     this.points = []
 
-    for (let x = this.x; x<=this.width;x+= this.spacing){
+    for (let x = this.x; x<=this.x+this.width;x+= this.spacing){
       var row = [];
-      for (let y = this.y;y<=this.height;y+= this.spacing){
+      for (let y = this.y;y<=this.y+this.height;y+= this.spacing){
         var xloc = x;
         var yloc = y
         row.push(createVector(xloc,yloc))

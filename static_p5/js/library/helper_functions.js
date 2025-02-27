@@ -1,24 +1,27 @@
 var pause = false;
 
-function keyTyped() {
 
-  if (key === 'p') {
-    if (pause){
-      pause = false;
-      loop();
-    } else {
-      pause = true;
-      noLoop();
+
+function download(data, filename, type) {
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, songNames[songIndex]+"txt");
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = 'params' + ".txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
     }
-  } else if (key === 'c') {
-    clear();
-  } else if (key === 'd') {
-    redraw();
-  } else if (key === 'f') {
-    let fs = fullscreen();
-    fullscreen(!fs);
-
 }
-  // uncomment to prevent any default behavior
-  return false;
+
+function exportParams(){
+  if (params){
+    download(JSON.stringify(params), 'thing', 'json')
+  }
 }

@@ -1,7 +1,8 @@
 var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette;
 
 function preload() {
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Lovers Rock - Sade.txt");
+  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\For Every Mountain (Live) - Kurt Carr.txt");
+  // result = loadStrings(dataURL + "It's Possible - Piero Piccioni.txt");
 }
 
 function setup() {
@@ -9,7 +10,7 @@ function setup() {
   // colorMode(RGB, 255,255,255,1.0)
   scale = 9/9;
   createCanvas(5400/9, 5400/9);
-  // background(360);
+  // background(0);
   console.log(result[0][0]);
   json = JSON.parse(result[0])
   console.log(json[6][10])
@@ -28,7 +29,7 @@ function setup() {
   cPalette.mapColor(1.0);
 
   cType = "HSB";
-  lType = QUADRATIC_;
+  lType = LINEAR_;
   ease = null;
   flip = false;
 

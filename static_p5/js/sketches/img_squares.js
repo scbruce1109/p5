@@ -6,8 +6,7 @@ function preload()
   img = loadImage("self_portrait_2_1500x2257.jpg");
 }
 
-function setup()
-{
+function setup(){
   // set canvas size
   createCanvas(1500, 2257);
   background(255);

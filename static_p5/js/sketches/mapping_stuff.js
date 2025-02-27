@@ -2,7 +2,7 @@ function setup(){
   createCanvas(600,600);
   background(255);
 
-  ting = new RandomGrowth(width,height,1000,.1);
+  ting = new RandomGrowth(width,height,1000,0.5);
   // for (let i =0;i<100;i++){
   //   // ting.grow(100);
   //   // ting.display();

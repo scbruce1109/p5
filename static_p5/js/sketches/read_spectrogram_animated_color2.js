@@ -1,14 +1,18 @@
 var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette;
 
+Array.prototype.max = function() {
+  return Math.max.apply(null, this);
+};
+
 function preload() {
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Roxanne - The Police.txt");
+  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Roll with the Changes - REO Speedwagon.txt");
 }
 
 function setup() {
   // colorMode(HSB, 360,100,100,1.0)
   // colorMode(RGB, 255,255,255,1.0)
-  scale = 7;
-  createCanvas(4200, 4200);
+  scale = 1;
+  createCanvas(600, 600);
   // background(360);
   console.log(result[0][0]);
   json = JSON.parse(result[0])
@@ -19,16 +23,16 @@ function setup() {
   b = 0;
   n = 0;
 
-  // color1 = color("#181778");
-  // color2 = color("#FF6600");
-  color1 = color("#3f434c");
-  color2 = color("#fe5322");
+  color1 = color("#181778");
+  color2 = color("#FF6600");
+  // color1 = color("#3f434c"); /// 00d5ff    ffce13    1e3d2a
+  // color2 = color("#fe5322");
   hexList = ["#181778", "#FF6600"]
   cPalette = new colorPalette(hexList);
   cPalette.mapColor(1.0);
 
   cType = "HSB";
-  lType = QUADRATIC_;
+  lType = SINUSOIDAL_;
   ease = null;
   flip = false;
 
@@ -100,14 +104,16 @@ function draw() {
          endl = 1.0;
        }
        // cPalette.mapColor(curLerp, "HSLUV", null,null,QUADRATIC_)
-       // var newC = cPalette.mapColor(map(json[n][i],0,255,startl,endl),cType,null,null,lType,ease,1); //// RGB with quadratic is also good
+       var newC = cPalette.mapColor(map(json[n][i],0,255,startl,endl),cType,null,null,lType,ease,1); //// RGB with quadratic is also good
 
        // var newC = color(0)
-       // newC.setAlpha(map(json[n][i],0,255,0.0,0.5))
+       var max = json[n].max();
+       newC.setAlpha(map(json[n][i],0,max,0.0,1))
        // stroke(0,0,0, hi.get(n)[i]/10);
        strokeWeight(scale);
        colorMode(RGB,255,255,255,255);
-       stroke(0, json[n][i]/7.5);
+       stroke(newC);
+       // stroke(newC, json[n][i]/20);
        //stroke(255);
        //ellipse(10,10,10,10);
        line(0, i/5*scale, 0, i/5*scale);

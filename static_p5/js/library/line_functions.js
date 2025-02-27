@@ -22,12 +22,7 @@ function intersectPoint(point1, point2, point3, point4) {
 }
 
 
-function dottedLine(origin, endpoint, density, width, scale){
-
-// if (strokeWeight){
-//   strokeWeight(strokeWeight)
-// }
-// fill(255,60)
+function dottedLine(origin, endpoint, density, width, scale,color){
 
 var dist = origin.dist(endpoint);
 var angle = getAngle(origin, endpoint);
@@ -39,6 +34,14 @@ for (let i = 0; i<numPoints;i++){
   var x = origin.x + cos(angle)*rando;
   // console.log(x);
   var y = origin.y + sin(angle)*rando;
+
+  if (color){
+    if (color.grid){
+    stroke(color.getValue(x,y).c)
+  } else{
+    stroke(color)
+  }
+}
 
   point(x,y);
 }
@@ -79,7 +82,7 @@ function getAngle(origin, endpoint){
   return theta;
 }
 
-function customLinePerlinNoise(origin, endpoint, randomAmount, step, scale_){
+function customLinePerlinNoise(origin, endpoint, randomAmount, step, scale_, color){
 
   if (! scale_){
     scale_ = 1;
@@ -111,6 +114,13 @@ function customLinePerlinNoise(origin, endpoint, randomAmount, step, scale_){
     /// i think we need to offset by 90 degrees
     // y = 10+noise(ynoise)*randomAmount+origin.y; /// between 10 and 210
 
+    if (color){
+      if (color.grid){
+      stroke(color.getValue(x,y).c)
+    } else{
+      stroke(color)
+    }
+  }
 
     if (lastx>-999){
      line(x,y,lastx,lasty);
@@ -138,6 +148,58 @@ class MyLine{
     var y = this.origin.y + sin(this.angle) * i;
 
     this.points.push([x,y])
+  }
+
+  console.log(this.points)
+
+}
+
+offsetPoints(amount){
+  var perpAngle = this.angle + PI/2;
+  for (let i = 1;i<this.points.length-1;i++){
+
+    console.log(degrees(this.angle))
+    console.log(degrees(perpAngle))
+    var rando = random(-amount,amount)
+    console.log(amount)
+    var newX = this.points[i][0] + cos(perpAngle)*rando;
+    var newY = this.points[i][1] + sin(perpAngle)*rando;
+    console.log('hey there')
+    this.points[i] = [newX,newY]
+    // ellipse(this.points[i][0],this.points[i][1],5,5);
+  }
+}
+
+  display(){
+    // line(this.origin.x,this.origin.y,this.end.x,this.end.y)
+  //   ellipse(this.origin.x,this.origin.y,10,10);
+  // ellipse(this.end.x,this.end.y,10,10);
+  for (let i = 0;i<this.points.length;i++){
+    if(i != this.points.length-1){
+      line(this.points[i][0],this.points[i][1],this.points[i+1][0],this.points[i+1][1])
+    }
+    // console.log('hey there')
+    // ellipse(this.points[i][0],this.points[i][1],5,5);
+  }
+  }
+}
+
+class Line{
+
+  constructor(origin,endpoint,numPoints){
+  this.origin = new p5.Vector(x1,y1);
+  this.end = new p5.Vector(x2,y2)
+  this.dist = this.origin.dist(this.end)
+  this.points = [];
+  this.angle = getAngle(this.origin,this.end);
+
+  var segLen = this.dist / numPoints;
+  for (let i =0;i<=this.dist;i+=segLen){
+    var p = p5.Vector.lerp(origin, endpoint, 0.5)
+    // var x = this.origin.x + cos(this.angle) * i;
+    // var y = this.origin.y + sin(this.angle) * i;
+
+    this.points.push(p)
   }
 
   console.log(this.points)
@@ -221,3 +283,125 @@ function placePoint(dest, jitter, gaussian){
   return(createVector(x,y))
 
 }
+
+class PolyLine{
+  constructor(listPoints){
+    this.points = listPoints;
+    this.calcLength();
+  }
+
+  calcLength(){
+    var d = 0;
+    for (let i = 0;i<this.points.length-1;i++){
+      var segD = this.points[i+1].dist(this.points[i])
+      d += segD
+    }
+    this.length = d
+  }
+
+  subdivide(numSubdivisions){
+    if (!numSubdivisions){
+      numSubdivisions = 1;
+    }
+    var newPoints = []
+    for (let i = 0;i<this.points.length-1;i++){
+      newPoints.push(this.points[i]);
+      newPoints.push(p5.Vector.lerp(this.points[i],this.points[i+1],0.5))
+      if (i == this.points.length-2){
+        console.log('hey i')
+        console.log(i)
+        newPoints.push(this.points[i+1])
+      }
+    }
+    this.points = newPoints;
+  }
+
+  offsetPoints(amount,preserveEnds){
+    var newPoints = [];
+    if (!preserveEnds){
+      var start = 1;
+      var end = this.points.length-1;
+    } else {
+      newPoints.push(this.points[0])
+      var start = 1;
+      var end = this.points.length-1;
+    }
+    for (let i = start;i<end;i++){
+      var segAngle = getAngle(this.points[i-1],this.points[i])
+      var orthAngle = segAngle + PI/2
+      var a = random(-amount,amount)
+      var x = this.points[i].x + cos(orthAngle) * a;
+      var y = this.points[i].y + sin(orthAngle) * a;
+      newPoints.push(createVector(x,y))
+
+    }
+    newPoints.push(this.points[this.points.length-1])
+    this.points = newPoints
+  }
+
+  smoothChaikin(depth){
+    for (let i = 0;i<depth;i++){
+      this.points = chaikinSmooth(this.points)
+    }
+  }
+
+  display(){
+    for (let i = 0;i<this.points.length-1;i++){
+      line(this.points[i].x,this.points[i].y,this.points[i+1].x,this.points[i+1].y)
+    }
+  }
+
+  displayDotted(density,color){
+    for (let i = 0;i<this.points.length-1;i++){
+      dottedLine(this.points[i], this.points[i+1], density, 1, 1,color)
+    }
+  }
+
+  displayWavy(amount,step,color){
+    for (let i = 0;i<this.points.length-1;i++){
+      customLinePerlinNoise(this.points[i], this.points[i+1], amount, step, 1, color)
+    }
+  }
+}
+
+
+function chaikinSmooth(points){
+ var newPoints = []
+  for (let i = 0;i<points.length;i++){
+    if (i == 0){
+      newPoints.push(points[i]);
+      var newPoint = p5.Vector.lerp(points[i], points[i+1], 0.75);
+      newPoints.push(newPoint);
+    }
+    else  if (i == points.length-1){
+
+        newPoints.push(points[i]);
+      } else {
+        var firstPoint = p5.Vector.lerp(points[i], points[i+1], 0.25);
+        var secondPoint = p5.Vector.lerp(points[i], points[i+1], 0.75);
+        newPoints.push(firstPoint);
+        newPoints.push(secondPoint);
+      }
+     }
+     return newPoints;
+}
+
+function drawCurve(points, depth, shape){
+ var newPoints = points;
+ for (let i = 0; i < depth; i++) {
+  newPoints = chaikinSmooth(newPoints);
+ }
+   beginShape();
+   for (let i = 0;i<newPoints.length;i++){
+     vertex(newPoints[i].x, newPoints[i].y);
+   }
+   if (shape){
+     fill(200,80,40);
+     //noStroke();
+    endShape(CLOSE);
+   } else {
+     noFill();
+    endShape();
+   }
+   return newPoints;
+ }
