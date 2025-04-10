@@ -7,9 +7,17 @@ class Camera{
     this.height = height_;
     this.fov = fov;
 
+    if (this.width > this.height){
+      var splen = this.width
+    } else if (this.height > this.width) {
+      var splen = this.height
+    } else {
+      var splen = this.width
+    }
+
     this.cameraHeight;
 
-    this.sp = new p5.Vector(x+ width_/2, (y+height_/2) + tan(radians(90-fov/2))*(width_/2))
+    this.sp = new p5.Vector(x+ width_/2, (y+height_/2) + tan(radians(90-fov/2))*(splen/2))
     this.sp2 = createVector(this.sp.x-width/2,this.height/2,-(this.sp.y-this.height/2))
     if (! location){
       this.location = this.sp2.copy()

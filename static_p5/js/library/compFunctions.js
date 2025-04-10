@@ -80,12 +80,18 @@ function idw2(samplePoint, listKnownPoints, radius, w, defaultVal){
       if (defaultVal){
         percentagesDefault.push(d/radius)
       }
+      if (listKnownPoints[i].mass){
+        massWeights.push(listKnownPoints[i].mass)
+      } else {
+        massWeights.push(1)
+      }
     }
     }
   }
 
   var weights = [];
   var sumDistances = calcSum(inverseDistances)
+  var sumWeights = calcSum(massWeights)
 
     if (defaultVal){
       var defaultWeight = 0;
@@ -103,6 +109,195 @@ function idw2(samplePoint, listKnownPoints, radius, w, defaultVal){
   return weights;
 }
 
+function idw3(samplePoint, listKnownPoints, radius, w, defaultVal){
+  var inverseDistances = []
+  var percentagesDefault = [];
+  var massWeights = [];
+  for (let i = 0;i < listKnownPoints.length;i++){
+    var d = samplePoint.dist(listKnownPoints[i]);
+    // console.log('smap')
+    // console.log(listKnownPoints[i]);
+    // console.log(d)
+    if (d < radius){
+      if (d != 0){
+      inverseDistances.push(1/d)
+      // console.log(1/d)
+      if (defaultVal){
+        percentagesDefault.push(d/radius)
+      }
+      if (listKnownPoints[i].mass){
+        massWeights.push(listKnownPoints[i].mass)
+      } else {
+        massWeights.push(1)
+      }
+    }
+  } else {
+    inverseDistances.push(0)
+    percentagesDefault.push(0)
+  }
+
+  }
+
+  var weights = [];
+  var sumDistances = calcSum(inverseDistances)
+  var sumWeights = calcSum(massWeights)
+  // console.log('sum distances')
+  // console.log(sumDistances)
+    if (defaultVal){
+      var defaultWeight = 0;
+      for (let i = 0;i<inverseDistances.length;i++){
+        if (inverseDistances[i] == 0){
+          weights.push(0);
+          defaultWeight += 0;
+        } else {
+        weights.push(inverseDistances[i]/sumDistances*(1-percentagesDefault[i]))
+        defaultWeight += inverseDistances[i]/sumDistances * percentagesDefault[i]
+      }
+    }
+    weights.push(defaultWeight)
+    } else {
+    for (let i = 0;i<inverseDistances.length;i++){
+      weights.push(inverseDistances[i]/sumDistances)
+  }
+  }
+  // console.log('weights')
+  // console.log(weights)
+  return weights;
+}
+
+function idw4(samplePoint, listKnownPoints, radius, w, defaultVal){
+  var inverseDistances = []
+  var percentagesDefault = [];
+  var massWeights = [];
+  for (let i = 0;i < listKnownPoints.length;i++){
+    var d = samplePoint.dist(listKnownPoints[i]);
+    if (d < radius){
+      if (d != 0){
+      inverseDistances.push(1/d)
+      // console.log(1/d)
+      if (defaultVal){
+        percentagesDefault.push(d/radius)
+      }
+    }
+  } else {
+    inverseDistances.push(0)
+    percentagesDefault.push(0)
+  }
+
+  }
+  // console.log('dis')
+  // console.log(inverseDistances)
+
+
+  var closest = inverseDistances.reduce((a, b) => Math.max(a, b), -Infinity);
+  // console.log(closest)
+  var amountDefault = percentagesDefault[inverseDistances.indexOf(closest)]
+  // console.log(percentagesDefault)
+  // console.log(amountDefault)
+  var amountColor = 1 - amountDefault
+
+  var weights = [];
+  var sumDistances = calcSum(inverseDistances)
+  var sumWeights = calcSum(massWeights)
+  // console.log('sum distances')
+  // console.log(sumDistances)
+    if (defaultVal){
+      for (let i = 0;i<inverseDistances.length;i++){
+        if (inverseDistances[i] == 0){
+          weights.push(0);
+        } else {
+        weights.push(inverseDistances[i]/sumDistances*amountColor)
+      }
+    }
+    weights.push(amountDefault)
+    } else {
+    for (let i = 0;i<inverseDistances.length;i++){
+      weights.push(inverseDistances[i]/sumDistances)
+  }
+  }
+  // console.log('weights')
+  // console.log(weights)
+  return weights;
+}
+
+function idw5(samplePoint, listKnownPoints, radius, w, defaultVal){
+  var inverseDistances = []
+  var percentagesDefault = [];
+  var massWeights = [];
+  var weights = new Array(listKnownPoints.length +1).fill(0);
+  // console.log('weights1')
+  // console.log(weights)
+  // console.log(listKnownPoints.length +1)
+  var inRange = false;
+  var locOnPoint = false
+  for (let i = 0;i < listKnownPoints.length;i++){
+    if (listKnownPoints[i].mass){
+      var mass = listKnownPoints[i].mass
+    } else {
+      var mass = 1
+    }
+    var d = samplePoint.dist(listKnownPoints[i]) / mass;
+    // console.log('smap')
+    // console.log(listKnownPoints[i]);
+    // console.log(d)
+    if (d < radius){
+      if (d != 0){
+        if (listKnownPoints[i].mass){
+          var mass = listKnownPoints[i].mass
+        } else {
+          var mass = 1
+        }
+      inverseDistances.push(1-d/radius)
+      inRange = true;
+      // console.log(1/d)
+      if (defaultVal){
+        percentagesDefault.push(d/radius)
+      }
+
+    } else {
+      locOnPoint = true
+      weights.fill(0)
+      weights[i] = 1;
+      return weights;
+    }
+  } else {
+    inverseDistances.push(0)
+    percentagesDefault.push(1)
+  }
+
+  }
+
+  // var weights = [];
+  var sumDistances = calcSum(inverseDistances)
+  var sumWeights = calcSum(massWeights)
+  // console.log('sum distances')
+  // console.log(sumDistances)
+    if (defaultVal){
+      var defaultWeight = 0;
+      for (let i = 0;i<inverseDistances.length;i++){
+        if (inverseDistances[i] == 0){
+          weights[i]=0;
+          defaultWeight += 0;
+        } else {
+        weights[i]= inverseDistances[i]/sumDistances*(1-percentagesDefault[i])
+        defaultWeight += inverseDistances[i]/sumDistances * percentagesDefault[i]
+      }
+    }
+    if (! inRange){
+      weights[weights.length-1] = 1
+    } else {
+    weights[weights.length-1] = defaultWeight
+  }
+    } else {
+      // weights.pop();
+    for (let i = 0;i<inverseDistances.length;i++){
+      weights[i]= inverseDistances[i]/sumDistances
+  }
+  }
+  // console.log('weights')
+  // console.log(weights)
+  return weights;
+}
 
 function getProbability(listProbs){
   var randomProb = random(0,1);

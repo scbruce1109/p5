@@ -15,8 +15,8 @@ function setup() {
 
   // params.points = makeLandscape(0,0,width,height,3)
 
-params.points = generatePoints(width/2, height/2, 200, 200, 5, 0)
-// params.points = distributePointsOnLine(createVector(random(width),random(height)), createVector(random(width),random(height)), 4)
+// params.points = generatePoints(width/2, height/2, 200, 200, 5, 0)
+params.points = distributePointsOnLine(createVector(random(width),random(height)), createVector(random(width),random(height)), 4)
 
   for (let i = 0;i<3;i++){
     params.points[i].z = 1
@@ -24,7 +24,7 @@ params.points = generatePoints(width/2, height/2, 200, 200, 5, 0)
   params.points[2].z = 1
   console.log('points')
   console.log(params)
-  g1.fillColor([color("#515e67"),color("#f1e0ac"),color('#ff9c5e'),color('#cc1d1d'),color('#0c2947')],params.points,800,color('#a0ccf4'))
+  g1.fillColor([color("#515e67"),color("#f1e0ac"),color('#ff9c5e'),color('#cc1d1d'),color('#0c2947')],params.points,300,color('#ffffff'))
   g1.display()
   console.log('typpy')
   console.log(typeof g1)

@@ -17,7 +17,7 @@ function preload() {
   if (loadParams){
     params = loadJSON(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\Everydays"+"\\passiton2.json");
     console.log(params)
-   params = JSON.parse(params)
+   // params = JSON.parse(params)
   } else {
     params = params;
   }

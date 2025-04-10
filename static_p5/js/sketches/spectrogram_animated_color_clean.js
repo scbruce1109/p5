@@ -1,6 +1,12 @@
 var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette, start1, end1, center,r,step;
+var params
+var loadColor = true
+var colName = "breweryellow"
 
 function preload() {
+  if(loadColor){
+    params = loadJSON(dataURL + "spec_colors.json");
+  }
   // result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Underdog - Kasabian.txt");
   result = loadStrings(dataURL + "It's Possible - Piero Piccioni.txt");
 }
@@ -9,6 +15,20 @@ function setup() {
   scale = 1;
   createCanvas(600, 600);
   json = JSON.parse(result[0])
+
+  if (params){
+    colors = colors = Object.values(params)
+    console.log(colors)
+    var col = colors.filter(obj => {
+  return obj.name === colName
+})
+hexList = col[0]['colors']
+cType = col[0]['cType']
+console.log(hexList)
+} else {
+  hexList = ["#000000","#ffffff"]
+  cType = "RGB";
+}
 
   console.log('file length')
   console.log(json.length)
@@ -27,13 +47,13 @@ function setup() {
   // hexList = ["#181778", "#FF6600"]
   // hexList = ["#181778", "#ffe600"]
   // hexList = ["#181778", "#fffefe"] // HSB
-  hexList = ["#000000","#ffffff"]
+
 
 
   cPalette = new colorPalette(hexList);
   cPalette.mapColor(1.0);
 
-  cType = "RGB";
+
   lType = QUADRATIC_;
   ease = null;
   flip = true;

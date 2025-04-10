@@ -1,10 +1,10 @@
 var img,movers,g1,g2,cg1,cg2;
 
 var params = {
-  title: 'port',
+  title: 'notan_face1',
   ext: '.png',
   noiseRez1: 0.02,
-  noiseRez2: 0.00005
+  noiseRez2: 0.05
 }
 
 function preload()
@@ -15,7 +15,7 @@ function preload()
 
 function setup(){
   createCanvas(img.width,img.height)
-  background(255);
+  background(0);
   // image(img,0,0)
   params.noiseSeed = random(10000);
 

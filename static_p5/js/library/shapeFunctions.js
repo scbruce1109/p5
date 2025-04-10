@@ -250,84 +250,128 @@ function applyM(p,transMatrix){
 }
 
 class Mesh {
-  constructor(centerPoint, verts, dMode){
-    this.verts = verts;
+  constructor(centerPoint, faces, dMode){
+    // this.verts = verts;
     this.pVerts = [];
     this.edges = [];
-    this.faces = [];
+    this.faces = faces;
     this.center = centerPoint;
     this.displayMode = dMode
+    this.rotation = {x:0,y:0,z:0}
   }
 
-  display(mode,projected,fillC,strokeC){
-    if (!mode){
-      mode = this.displayMode;
+  display(camera){
+    for (let f = 0;f<this.faces.length;f++){
+      var projected = camera.project(this.faces[f]);
+      var pshape = new myShape(projected)
+      pshape.display()
     }
-    mode = this.displayMode;
-    // if
-    var verts;
-    // if(projected){
-      verts = this.pVerts;
-    // } else {
-    //   verts = this.verts;
+  }
+
+  copy(){
+    var newFaces = [];
+    for (let i = 0;i<this.faces.length;i++){
+      newFaces.push(this.faces[i].slice())
+    }
+    var copy = new Mesh(this.center.copy(),newFaces)
+    copy.rotation = this.rotation;
+    return copy
+  }
+
+  // display(mode,projected,fillC,strokeC){
+  //   if (!mode){
+  //     mode = this.displayMode;
+  //   }
+  //   mode = this.displayMode;
+  //   // if
+  //   var verts;
+  //   // if(projected){
+  //     verts = this.pVerts;
+  //   // } else {
+  //   //   verts = this.verts;
+  //   // }
+  //   // if (mode == 'p'){
+  //   //   stroke(0)
+  //   //   for (let i = 0;i<verts.length;i++){
+  //   //     point(verts[i].x,verts[i].y)
+  //   //   }
+  //   // } else if (mode == 'e'){
+  //   //
+  //   //   stroke(0,100)
+  //   //   for (let i = 0;i<this.edges.length;i++){
+  //   //     // var zz = map(this.verts[index[1].z,this.centerPoin.z,])
+  //   //     var index = this.edges[i];
+  //   //     // console.log(index)
+  //   //     line(verts[index[0]].x,verts[index[0]].y,verts[index[1]].x,verts[index[1]].y)
+  //   //   }
+  //   //   } else if (mode == 'f'){
+  //       // noStroke();
+  //       // fill(fillC);
+  //     for (let i = 0;i<this.faces.length;i++){
+  //       beginShape();
+  //
+  //       for (let i = 0;i<verts.length;i++){
+  //       vertex(verts[i].x,verts[i].y)
+  //     }
+
+
+  // endShape(CLOSE);
+  //
+  //     }
     // }
-    if (mode == 'p'){
-      stroke(0)
-      for (let i = 0;i<verts.length;i++){
-        point(verts[i].x,verts[i].y)
+  // }
+
+  // project(cam){
+  //   this.pVerts = [];
+  //   for (let i = 0;i<this.verts.length;i++){
+  //       var pP = cam.pointInPerspective(this.verts[i])
+  //       this.pVerts.push(pP);
+  //     }
+  // }
+
+  rotate(angle,axis){
+    var rotMatrix = rotateAroundPoint(this.center, angle, axis);
+      for (let i =0;i<this.faces.length;i++){
+        for (let j = 0;j<this.faces[i].length;j++){
+        this.faces[i][j] = applyM(this.faces[i][j],rotMatrix);
       }
-    } else if (mode == 'e'){
-
-      stroke(0,100)
-      for (let i = 0;i<this.edges.length;i++){
-        // var zz = map(this.verts[index[1].z,this.centerPoin.z,])
-        var index = this.edges[i];
-        // console.log(index)
-        line(verts[index[0]].x,verts[index[0]].y,verts[index[1]].x,verts[index[1]].y)
       }
-      } else if (mode == 'f'){
-        noStroke();
-        fill(fillC);
-      for (let i = 0;i<this.faces.length;i++){
-        beginShape();
-
-        for (let i = 0;i<verts.length;i++){
-        vertex(verts[i].x,verts[i].y)
-      }
-
-
-  endShape(CLOSE);
-
-      }
+    if (axis = 'x'){
+      this.rotation.x += angle;
+    } else if (axis = 'y'){
+      this.rotation.y += angle;
+    } else {
+      this.rotation.z += angle;
     }
   }
 
-  project(cam){
-    this.pVerts = [];
-    for (let i = 0;i<this.verts.length;i++){
-        var pP = cam.pointInPerspective(this.verts[i])
-        this.pVerts.push(pP);
-      }
-  }
-
-
-  rotateMesh(angle, axis, p){
-    if (!p){
-      p = this.center
+  translate(v){
+    var tMatrix = translateMatrix(v.x,v.y,v.z);
+    for (let i =0;i<this.faces.length;i++){
+      for (let j = 0;j<this.faces[i].length;j++){
+      this.faces[i][j] = applyM(this.faces[i][j],tMatrix);
     }
-    var rotMatrix = rotateAroundPoint(p, angle, axis);
-    for (let i =0;i<this.verts.length;i++){
-      this.verts[i] = applyM(this.verts[i],rotMatrix);
-    }
-    this.center = applyM(this.center,rotMatrix)
-  }
-  translateMesh(x,y,z){
-    var tMatrix = translateMatrix(x,y,z);
-    for (let i =0;i<this.verts.length;i++){
-      this.verts[i] = applyM(this.verts[i],tMatrix);
     }
     this.center = applyM(this.center,tMatrix)
   }
+
+  // rotateMesh(angle, axis, p){
+  //   if (!p){
+  //     p = this.center
+  //   }
+  //   var rotMatrix = rotateAroundPoint(p, angle, axis);
+  //   for (let i =0;i<this.verts.length;i++){
+  //     this.verts[i] = applyM(this.verts[i],rotMatrix);
+  //   }
+  //   this.center = applyM(this.center,rotMatrix)
+  // }
+  // translateMesh(x,y,z){
+  //   var tMatrix = translateMatrix(x,y,z);
+  //   for (let i =0;i<this.verts.length;i++){
+  //     this.verts[i] = applyM(this.verts[i],tMatrix);
+  //   }
+  //   this.center = applyM(this.center,tMatrix)
+  // }
 
 }
 
@@ -382,53 +426,38 @@ function makeBox(center,width_,height_,girth,dmode){
   return boxx;
 }
 
-function makeArray(meshArray,space,num, axis){
-  // if (!numX){
-  //   numX = 0;
-  // }
-  // if (!numY){
-  //   numY = 0;
-  // }
-  // if (!numZ){
-  //   numZ = 0;
-  // }
+function arrayOnLine(mesh,p1,p2,num){
+  var t = 1 / num;
+  var meshArray = []
+  for (let i = 0;i<num;i++){
+    var newP = p5.Vector.lerp(p1,p2,t*i)
+    var meshCopy = mesh.copy();
+    meshCopy.translate(p5.Vector.sub(newP,p1))
+    meshArray.push(meshCopy)
+  }
+  return meshArray;
+}
 
+function makeArray(meshArray,space,num, axis){
   arrayMeshes = [];
 
   for (let i = 0;i<num;i++){
     for (let j = 0;j<meshArray.length;j++){
-    var meshCopy = new Mesh(meshArray[j].center.copy(),meshArray[j].verts.slice(),meshArray[j].displayMode);
+    var meshCopy = meshArray[j].copy();
 
-    meshCopy.edges = meshArray[j].edges
-    meshCopy.faces = meshArray[j].faces
+    // meshCopy.edges = meshArray[j].edges
+    // meshCopy.faces = meshArray[j].faces
     if (axis == 'x'){
-      meshCopy.translateMesh(space*(i+1),0,0);
+      meshCopy.translate(createVector(space*(i+1),0,0));
     } else if (axis == 'y'){
-      meshCopy.translateMesh(0,space*(i+1),0)
+      meshCopy.translate(createVector(0,space*(i+1),0))
     } else {
-      meshCopy.translateMesh(0,0,space*(i+1))
+      meshCopy.translate(createVector(0,0,space*(i+1)))
     }
 
     arrayMeshes.push(meshCopy)
   }
 }
-
-  // for (let i = 0;i<numY;i++){
-  //   var meshCopy = new Mesh(mesh.center.copy(),mesh.verts.slice(),mesh.displayMode);
-  //   meshCopy.edges = mesh.edges
-  //   meshCopy.faces = mesh.faces
-  //   meshCopy.translateMesh(0,space*(i+1),0);
-  //   arrayMeshes.push(meshCopy)
-  // }
-  //
-  // for (let i = 0;i<numZ;i++){
-  //   var meshCopy = new Mesh(mesh.center.copy(),mesh.verts.slice(),mesh.displayMode);
-  //   meshCopy.edges = mesh.edges
-  //   meshCopy.faces = mesh.faces
-  //   meshCopy.translateMesh(0,0,space*(i+1));
-  //   arrayMeshes.push(meshCopy)
-  // }
-
   return arrayMeshes;
 
 }

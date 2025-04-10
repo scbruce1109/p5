@@ -1,0 +1,39 @@
+[
+  {"name": "viridis","colors": [
+    "#440d56",
+    "#fce622"
+    ],
+    "cType": "HSB"
+  },
+  {"name": "ting","colors": [
+      "#420a52",
+      "#fd0500"
+      ],
+      "cType": "HSB"},
+  {"name": "magma","colors": [
+    "#000000",
+    "#af347b",
+    "#fbfcbe"
+    ],
+    "cType": "MIX"},
+  {"name": "ggplot","colors": [
+    "#142c43",
+    "#54b0f6"
+    ],
+    "cType": "MIX"},
+  {"name": "brewer","colors": [
+    "#09316b",
+    "#f7fbff"
+    ],
+    "cType": "MIX"},
+  {"name": "breweryellow","colors": [
+    "#091e58",
+    "#fffdda"
+    ],
+    "cType": "MIX"},
+  {"name": "heat","colors": [
+    "#ff2300",
+    "#fffef2"
+    ],
+    "cType": "HSB"}
+]

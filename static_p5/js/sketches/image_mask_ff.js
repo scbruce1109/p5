@@ -1,7 +1,7 @@
 var img,movers,g1,g2;
 
 var params = {
-  title: 'port',
+  title: 'notan_face1',
   ext: '.png',
   noiseRez1: 0.002,
   noiseRez2: 0.0005

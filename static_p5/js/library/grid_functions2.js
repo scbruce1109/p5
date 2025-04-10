@@ -79,7 +79,7 @@ function newAngleFromPoints(location,listPoints, radius){
 
 function colorFromPoints(location, colors, listPoints, radius, defaultC){
   var vals = [];
-  var weights = idw2(location, listPoints, radius,true,defaultC);
+  var weights = idw5(location, listPoints, radius,true,defaultC);
   if (defaultC){
     // colors.push(defaultC)
     colors = Array.from(colors)

@@ -5,8 +5,8 @@ var params = {
 
 function setup(){
   createCanvas(600,600);
-  background(0,0,50)
-  stroke(0,50)
+  // background(200,150,150)
+  stroke(0,0.1)
 
   g1 = new ColorGrid(0,0,width,height,5);
   params.cList = [];
@@ -27,19 +27,19 @@ for(let i = 0;i<300;i++){
 
   // console.log(ting.points)
 
-  ting.offsetPoints(50,true)
-  ting.subdivide()
-  ting.offsetPoints(25,true)
-  ting.subdivide()
-  ting.offsetPoints(5,true)
+  // ting.offsetPoints(50,true)
+  // ting.subdivide()
+  // ting.offsetPoints(25,true)
+  // ting.subdivide()
+  // ting.offsetPoints(5,true)
   // ting.subdivide()
   // ting.offsetPoints(12,true)
   ting.smoothChaikin(3)
-  // ting.displayWavy(5,5,g1)
+  ting.displayWavy(2,1,g1)
   // console.log(ting.length)
   // ting.calcLength();
   // console.log(ting.length)
-  ting.displayDotted(0.1,g1)
+  // ting.displayDotted(0.1,g1)
   heighty += 2
 }
 }
