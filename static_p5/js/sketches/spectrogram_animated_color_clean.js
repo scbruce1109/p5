@@ -1,19 +1,19 @@
 var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette, start1, end1, center,r,step;
 var params
-var loadColor = true
+var loadColor = false
 var colName = "breweryellow"
 
 function preload() {
   if(loadColor){
     params = loadJSON(dataURL + "spec_colors.json");
   }
-  // result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Underdog - Kasabian.txt");
-  result = loadStrings(dataURL + "It's Possible - Piero Piccioni.txt");
+  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\I'm Still Standing - Elton John.txt");
+  // result = loadStrings(dataURL + "It's Possible - Piero Piccioni.txt");
 }
 
 function setup() {
-  scale = 1;
-  createCanvas(600, 600);
+  scale = 7;
+  createCanvas(4200, 4200);
   json = JSON.parse(result[0])
 
   if (params){
@@ -55,7 +55,7 @@ console.log(hexList)
 
 
   lType = QUADRATIC_;
-  ease = null;
+  ease = EASE_IN;
   flip = true;
 
   var x = 0;
@@ -92,9 +92,9 @@ function draw() {
 
      var newC = cPalette.mapColor(map(json[n][i],0,255,startl,endl),cType,null,null,lType,ease,1); //// RGB with quadratic is also good
 
-     newC.setAlpha(map(json[n][i],0,255,0.0,0.5))
+     newC.setAlpha(map(json[n][i],0,255,0.0,0.2))
      strokeWeight(scale);
-     colorMode(RGB,255,255,255,255);
+     // colorMode(RGB,255,255,255,255);
      stroke(newC);
 
 

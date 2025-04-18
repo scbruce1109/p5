@@ -1,15 +1,15 @@
 var sp, ml, hl, mpl, mpr, vpl, vpr, cv, rotation,recCenter,ging, axis, w;
 var lineMesh,sphereMesh,sphereMesh2,m,rec,v,v1,shapes,recp,sphe,sphe2;
-var tings,movers, horz, line1, line2;
+var tings,movers, horz
 
-loadParams = true;
-var paramName = 'up'
+loadParams = false;
+var paramName = 'sphere'
 
 var params = {
   noiseSeed: 0,
   locationX: 0,
-  locationY: -1000,
-  locationZ: -0,
+  locationY: -0,
+  locationZ: -450,
   rotationX: 0,
   rotationY: -0,
   rotationZ: 0
@@ -40,18 +40,16 @@ function setup() {
   ging = new Camera(0,0,width,height,60,createVector(params.locationX,params.locationY,params.locationZ),{x:params.rotationX,y:params.rotationY,z:params.rotationZ});
 
   recp = [
-    createVector(-50,-50,-0),
-    createVector(-50,50,0),
-    createVector(50,50,0),
-    createVector(50,-50,0),
+    createVector(-100,-100,-0),
+    createVector(-100,100,0),
+    createVector(100,100,0),
+    createVector(100,-100,-0),
   ]
 
-  line1 = [createVector(0,0,0),createVector()]
-
   rec = new Mesh(createVector(0,0,0),[recp])
-  rec.translate(createVector(100,200,200))
-  rec.rotate(radians(90),'x')
-  // rec.rotate(radians(45),'z')
+  // rec.translate(createVector(0,0,0))
+  // rec.rotate(radians(90),'x')
+  // rec.rotate(radians(45),'y')
 //   for (let i =0;i<1000;i++){
 //   v = placePointOnPlane(rec.faces[0],random(1),random(1))
 //   var m = new Mover3D(v,1)
@@ -63,7 +61,7 @@ function setup() {
   console.log('horz')
   console.log(horz)
 
-  shapes = arrayOnLine(rec,createVector(0,0,0),createVector(0,0,4000),20)
+  // shapes = arrayOnLine(rec,createVector(0,0,0),createVector(0,0,2000),50)
 
   console.log('shapes')
   console.log(shapes)
@@ -96,9 +94,9 @@ function draw() {
 
   if (keyIsPressed === true) {
     if (key === 'w'){
-  ging.translate(w,createVector(0,10,0))
+  ging.translate(w,createVector(0,-10,0))
 } else if (key === 's'){
-  ging.translate(w,createVector(0,-10,-0)) ////sin(radians(ging.rotation.x))*10
+  ging.translate(w,createVector(0,10,-0))
 }  else if (key === 'a'){
   ging.translate(w,createVector(-10,0,-0))
 } else if (key === 'd'){
@@ -114,15 +112,15 @@ function draw() {
   ging.rotate(w,-0,0,.5)
   // w.rotate(ging.sp2,-5,'x')
 }else if (key === 'u'){
-  ging.rotate(w,.5,0,0)
+  ging.rotate(w,-.5,0,0)
   // w.rotate(ging.sp2,5,'x')
 } else if (key === 'j'){
-  ging.rotate(w,-.5,0,0)
+  ging.rotate(w,.5,0,0)
   }
 }
 
   var hl = ging.displayHL();
-  // rec.rotate(radians(1),'z')
+  // rec.rotate(radians(1),'y')
   noFill()
   fill(200,0,0,40)
   // sphe2.display(ging)
@@ -131,9 +129,9 @@ function draw() {
 //
 // sphe.display(ging)
 
-for (let i = 0;i<shapes.length;i++){
-  shapes[i].display(ging)
-}
+// for (let i = 0;i<shapes.length;i++){
+//   // shapes[i].display(ging)
+// }
 // ellipse(ging.project([v])[0].x,ging.project([v])[0].y,20,20)
 var lineps = [v]
 lineps = ging.project(horz)
@@ -142,7 +140,7 @@ var zink = new PolyLine(lineps)
 stroke(0)
 zink.display()
 noStroke();
-ellipse(lineps[0].x,lineps[0].y,10,10)
+// ellipse(lineps[0].x,lineps[0].y,10,10)
 // for (let i =0;i<movers.length;i++){
 // var x = -map(noise(movers[i].location.x*0.002),0,1,-1,1);
 // var y = map(noise(movers[i].location.y*0.002),0,1,-1,1);
@@ -156,10 +154,10 @@ ellipse(lineps[0].x,lineps[0].y,10,10)
 
   fill(0)
   text("x: " + ging.rotation.x.toString(),50,50)
-  text("z: " +ging.rotation.z.toString(),50,75)
+  text("y: " +ging.rotation.y.toString(),50,75)
   text("Cam location",50,100)
   text("X: " + (ging.location.x ).toString(),50,120)
-  text("Y: " + (ging.location.y ).toString() ,50,140)
+  text("Y: " + (ging.location.y).toString() ,50,140)
   text("Z: " + (ging.location.z ).toString(),50,160)
 
   params.locationX = ging.location.x;

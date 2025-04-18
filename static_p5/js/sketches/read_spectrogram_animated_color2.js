@@ -5,7 +5,7 @@ Array.prototype.max = function() {
 };
 
 function preload() {
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Roll with the Changes - REO Speedwagon.txt");
+  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\I'm Still Standing - Elton John.txt");
 }
 
 function setup() {

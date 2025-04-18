@@ -57,7 +57,7 @@ function lerpColor2(color1,color2,lurpVal, colorSpace, start, end, type, ease){
   }
 
   if (! type ){
-    var type = LINEAR_;
+    var type = QUADRATIC_;
   }
 
   if (! ease ){

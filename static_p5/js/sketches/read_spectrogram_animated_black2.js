@@ -1,7 +1,7 @@
 var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette;
 
 function preload() {
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Easy - Alannah McCready.txt");
+  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\I'm Still Standing - Elton John.txt");
 }
 
 Array.prototype.max = function() {

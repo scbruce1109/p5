@@ -1,6 +1,6 @@
 var spectrumArray = [];
 var songNames = [
-  "Underdog - Kasabian",
+  "I'm Still Standing - Elton John",
 
 ]
 var title;

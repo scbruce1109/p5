@@ -33,6 +33,7 @@ class Sketch(models.Model):
     title = models.CharField(max_length=120)
     slug = models.SlugField(blank=True, unique=True)
     has_buttons = models.BooleanField(default=False,blank=True,null=True)
+    old_3d = models.BooleanField(default=False,blank=True,null=True)
 
     objects = SketchManager()
 
