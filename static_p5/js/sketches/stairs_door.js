@@ -1,9 +1,7 @@
-var sp, ml, hl, mpl, mpr, vpl, vpr, cv, rotation,recCenter,ging, axis, w;
-var lineMesh,sphereMesh,sphereMesh2,m,rec,v,v1,shapes,recp,sphe,sphe2;
-var tings,movers, horz, line1, line2,rec2;
+var e,r,e2,r2;
 
 loadParams = false;
-var paramName = 'up'
+var paramName = 'building'
 
 var params = {
   noiseSeed: 0,
@@ -27,8 +25,8 @@ function preload() {
 
 function setup() {
   w = ''
-  createCanvas(600, 900);
-  background(255);
+  createCanvas(900, 900);
+  background(0);
 
   movers = [];
   params.noiseSeed = 88767.3074244767
@@ -36,70 +34,49 @@ function setup() {
 
   noiseSeed(params.noiseSeed)
 
-  noFill();
   ging = new Camera(0,0,width,height,60,createVector(params.locationX,params.locationY,params.locationZ),{x:params.rotationX,y:params.rotationY,z:params.rotationZ});
 
-  recp = [
-    createVector(-50,-50,-0),
-    createVector(-50,50,0),
-    createVector(50,50,0),
-    createVector(50,-50,0),
-  ]
+  var p = pointOnGround(ging, -0,5000)
+  var p2 = pointOnGround(ging, random(-30,30),random(3000,10000))
+  var p4 = pointOnGround(ging, random(-30,30),random(3000,10000))
+  p2[1].z = 1000
+  var p3 = pointOnGround(ging, 0,1000)
+// var ps = []
+//   console.log('pp')
+//   console.log(p)
+//   console.log(p3)
+var ps = [p3[1],p2[1]];
 
-  line1 = [createVector(0,0,0),createVector()]
-
-  rec = new Mesh(createVector(0,0,0),[recp])
-  rec.translate(createVector(100,200,200))
-  rec.rotate(radians(90),'x')
-
-  // rec2 = makeRect(createVector(0,0,0),500,500,true)
-  var tt = [
-    createVector(0,0,0),
-    createVector(0,0,300),
-    createVector(300,300,700)
-  ]
-  rec2 = new Mesh(createVector(0,0,0),[tt],false,true)
-  // rec2.rotate(radians(90),'x')
-  // rec.rotate(radians(45),'z')
-//   for (let i =0;i<1000;i++){
-//   v = placePointOnPlane(rec.faces[0],random(1),random(1))
-//   var m = new Mover3D(v,1)
-//   movers.push(m);
+//   var o = createVector(0,0,0);
+//   ps.push(o)
+//   for (let i = 0;i<100;i++){
+//   var end = placePoint3D(o, random(90,180),random(360),100);
+//   ps.push(end)
+//   o = end
+//
+//   var angles = getAngle3D(o,end)
+//   console.log(angles)
+//   var end2 = placePoint3D(end, angles[0]+90,angles[1]+90,100);
 // }
-
-
-  horz = fovWidth(ging,500000)
-  console.log('horz')
-  console.log(horz)
-
-  shapes = arrayOnLine(rec,createVector(0,0,0),createVector(0,0,4000),20)
-
-  console.log('shapes')
-  console.log(shapes)
-  var rott = 0
-
+  r = new Rect3D(createVector(0,0,0),400,50)
+  // r.rotate(radians(90),'x')
+  r2 = new Rect3D(p2[1],100,500,true)
+  r2.rotate(radians(90),'x')
+  // e = new Line3D([createVector(0,0,0),createVector(1000,1000,0),createVector(-1000,2000,0),createVector(-1500,4000,1000)])
+  e = new Line3D(ps)
+  e.smoothChaikin(4)
+  r = arrayOnLine(r,e,80)
+  // e2 = new Line3D([end,end2])
+  // e2
 
 
 
-  console.log('shape')
-  console.log(sphe)
-
-zoob = pointOnGround(ging,0,10000)
-tings = [v,zoob];
-  // ging.initWorld(w)
-  console.log('uhhh')
-  console.log(ging.location.copy())
-  ging.displayHL()
-
-  fill(200,0,0,100)
-  // sphe2.display(ging)
-  noStroke()
-  rec.display(ging)
-  console.log(params)
+  // e = new Ellipse3D(createVector(0,1000,0),100,100,20)
 }
 
 function draw() {
-  background('#ffe8b2');
+  // background('#ffe8b2');
+  background(0,0,40)
   strokeWeight(1)
   stroke(0,100);
 
@@ -129,39 +106,19 @@ function draw() {
   ging.rotate(w,-.5,0,0)
   }
 }
-
+noFill();
+  // e.display(ging)
+  // e2.display(ging)
+  fill(255,150)
+  for (let i = 0;i<r.length;i++){
+    r[i].display(ging)
+  }
+  r2.display(ging)
   var hl = ging.displayHL();
-  // rec.rotate(radians(1),'z')
-  noFill()
-  fill(200,0,0,40)
-  // sphe2.display(ging)
-  // noStroke()
-  rec.display(ging)
-  noFill();
-  rec2.display(ging);
-//
-// sphe.display(ging)
 
-for (let i = 0;i<shapes.length;i++){
-  shapes[i].display(ging)
-}
-// ellipse(ging.project([v])[0].x,ging.project([v])[0].y,20,20)
-var lineps = [v]
-lineps = ging.project(horz)
-// console.log(lineps)
-var zink = new PolyLine(lineps)
-stroke(0)
-zink.display()
-noStroke();
-ellipse(lineps[0].x,lineps[0].y,10,10)
-// for (let i =0;i<movers.length;i++){
-// var x = -map(noise(movers[i].location.x*0.002),0,1,-1,1);
-// var y = map(noise(movers[i].location.y*0.002),0,1,-1,1);
-// var z = -map(noise(movers[i].location.z*0.002),0,1,-1,1);
-//
-// var zzz = createVector(x,y,z)
-// movers[i].addForce(zzz);
-// movers[i].display(ging)
+// for (let i = 0;i<shapes.length;i++){
+//   shapes[i].display(ging)
+//   // console.log('hye')
 // }
 
 

@@ -74,7 +74,7 @@ function setup() {
 
 v1 = createVector(0,0,0);
 v = p5.Vector.fromAngles(radians(90), radians(90-ging.rotation.y),100)
-v.setMag(400)
+v.setMag(200)
 
   // ging.initWorld(w)
 

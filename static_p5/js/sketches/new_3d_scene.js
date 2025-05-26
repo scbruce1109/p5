@@ -1,9 +1,7 @@
-var sp, ml, hl, mpl, mpr, vpl, vpr, cv, rotation,recCenter,ging, axis, w;
-var lineMesh,sphereMesh,sphereMesh2,m,rec,v,v1,shapes,recp,sphe,sphe2;
-var tings,movers, horz, line1, line2,rec2;
+var e,r,e2,r2,g1,shapes;
 
 loadParams = false;
-var paramName = 'up'
+var paramName = 'building'
 
 var params = {
   noiseSeed: 0,
@@ -28,78 +26,32 @@ function preload() {
 function setup() {
   w = ''
   createCanvas(600, 900);
-  background(255);
+  background('#ffffff');
+
+  g1 = new ColorGrid(0,0,width,height,5);
 
   movers = [];
   params.noiseSeed = 88767.3074244767
 
 
   noiseSeed(params.noiseSeed)
-
-  noFill();
+  shapes = []
   ging = new Camera(0,0,width,height,60,createVector(params.locationX,params.locationY,params.locationZ),{x:params.rotationX,y:params.rotationY,z:params.rotationZ});
+  for (let i = 0;i<200;i++){
+    var p = placePoint3D(createVector(0,0,0),random(360),random(360),500);
 
-  recp = [
-    createVector(-50,-50,-0),
-    createVector(-50,50,0),
-    createVector(50,50,0),
-    createVector(50,-50,0),
-  ]
+    e = new Sphere3D(p,50)
+    shapes.push(e);
+  }
 
-  line1 = [createVector(0,0,0),createVector()]
+  // r = new Box3D(createVector(0,0,0),100,100,100)
 
-  rec = new Mesh(createVector(0,0,0),[recp])
-  rec.translate(createVector(100,200,200))
-  rec.rotate(radians(90),'x')
-
-  // rec2 = makeRect(createVector(0,0,0),500,500,true)
-  var tt = [
-    createVector(0,0,0),
-    createVector(0,0,300),
-    createVector(300,300,700)
-  ]
-  rec2 = new Mesh(createVector(0,0,0),[tt],false,true)
-  // rec2.rotate(radians(90),'x')
-  // rec.rotate(radians(45),'z')
-//   for (let i =0;i<1000;i++){
-//   v = placePointOnPlane(rec.faces[0],random(1),random(1))
-//   var m = new Mover3D(v,1)
-//   movers.push(m);
-// }
-
-
-  horz = fovWidth(ging,500000)
-  console.log('horz')
-  console.log(horz)
-
-  shapes = arrayOnLine(rec,createVector(0,0,0),createVector(0,0,4000),20)
-
-  console.log('shapes')
-  console.log(shapes)
-  var rott = 0
-
-
-
-
-  console.log('shape')
-  console.log(sphe)
-
-zoob = pointOnGround(ging,0,10000)
-tings = [v,zoob];
-  // ging.initWorld(w)
-  console.log('uhhh')
-  console.log(ging.location.copy())
-  ging.displayHL()
-
-  fill(200,0,0,100)
-  // sphe2.display(ging)
-  noStroke()
-  rec.display(ging)
-  console.log(params)
+  // e = new Ellipse3D(createVector(0,1000,0),100,100,20)
 }
 
 function draw() {
   background('#ffe8b2');
+  // background(0,0,40)
   strokeWeight(1)
   stroke(0,100);
 
@@ -129,49 +81,29 @@ function draw() {
   ging.rotate(w,-.5,0,0)
   }
 }
+// noFill();
+// noStroke();
+fill(255,80)
+  // e.display(ging)
+  // noFill();
+  // r.display(ging);
+  // e2.display(ging)
 
   var hl = ging.displayHL();
-  // rec.rotate(radians(1),'z')
-  noFill()
-  fill(200,0,0,40)
-  // sphe2.display(ging)
-  // noStroke()
-  rec.display(ging)
-  noFill();
-  rec2.display(ging);
-//
-// sphe.display(ging)
 
 for (let i = 0;i<shapes.length;i++){
   shapes[i].display(ging)
+  // console.log('hye')
 }
-// ellipse(ging.project([v])[0].x,ging.project([v])[0].y,20,20)
-var lineps = [v]
-lineps = ging.project(horz)
-// console.log(lineps)
-var zink = new PolyLine(lineps)
-stroke(0)
-zink.display()
-noStroke();
-ellipse(lineps[0].x,lineps[0].y,10,10)
-// for (let i =0;i<movers.length;i++){
-// var x = -map(noise(movers[i].location.x*0.002),0,1,-1,1);
-// var y = map(noise(movers[i].location.y*0.002),0,1,-1,1);
-// var z = -map(noise(movers[i].location.z*0.002),0,1,-1,1);
-//
-// var zzz = createVector(x,y,z)
-// movers[i].addForce(zzz);
-// movers[i].display(ging)
-// }
 
 
-  fill(0)
-  text("x: " + ging.rotation.x.toString(),50,50)
-  text("z: " +ging.rotation.z.toString(),50,75)
-  text("Cam location",50,100)
-  text("X: " + (ging.location.x ).toString(),50,120)
-  text("Y: " + (ging.location.y ).toString() ,50,140)
-  text("Z: " + (ging.location.z ).toString(),50,160)
+  // fill(0)
+  // text("x: " + ging.rotation.x.toString(),50,50)
+  // text("z: " +ging.rotation.z.toString(),50,75)
+  // text("Cam location",50,100)
+  // text("X: " + (ging.location.x ).toString(),50,120)
+  // text("Y: " + (ging.location.y ).toString() ,50,140)
+  // text("Z: " + (ging.location.z ).toString(),50,160)
 
   params.locationX = ging.location.x;
   params.locationY = ging.location.y;

@@ -29,7 +29,33 @@ console.log(params.points)
   // params.points[2].z = 1
 
   g1.fillColor([color("#ff7a40"),color("#ffe040")],params.points,300,color('#ffffff'))
-  g1.display()
+  // g1.display()
+
+  for (let i =0;i<2000;i++){
+    // var p = placePoint(createVector(width/2,height/2),200,false)
+    var p = createVector(random(width),random(height))
+    var c1 = g1.getValue(p.x,p.y).c
+    c1.setAlpha(0.1)
+    fill(c1);
+    noStroke();
+    var zoop = generatePoints(p.x, p.y,random(200),random(300),Math.floor(random(3,8)))
+    var ding = new myShape(zoop,true)
+    ding.offsetPoints(random(200))
+    ding.subdivide(2)
+    // console.log(ding.points)
+    ding.offsetPoints(random(20))
+    ding.subdivide(2)
+    // console.log(ding.points)
+    ding.offsetPoints(random(50))
+    // var c1 = g1.getValue(bgGrid.points[i][j].x,bgGrid.points[i][j].y).c
+    // c1.
+    ding.smoothChaikin(2)
+    // ding.offsetPoints(random(50))
+    // ding.smoothChaikin(2)
+    // ding.offsetPoints(random(10))
+    // ding.smoothChaikin(2)
+    ding.display()
+  }
 
   // colorMode(HSB,360,100,100,1.0)
   //

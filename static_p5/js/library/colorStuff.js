@@ -46,7 +46,7 @@ function rgb2hsluv(rgbColor){
 
 function lerpColor2(color1,color2,lurpVal, colorSpace, start, end, type, ease){
   var newC;
-
+  // console.log(type)
 ///////// Set default parameters
   if (! start ){
     var start = 0.0;
@@ -57,7 +57,7 @@ function lerpColor2(color1,color2,lurpVal, colorSpace, start, end, type, ease){
   }
 
   if (! type ){
-    var type = QUADRATIC_;
+    var type = LINEAR_;
   }
 
   if (! ease ){
@@ -319,7 +319,7 @@ class colorPalette{
     }
     stop = stop % (this.colorList.length-1)
    var newLerp = map(lerpVal,lBound, hBound, 0.0,1.0)
-   var newC = lerpColor2(color(this.colorList[stop]),color(this.colorList[stop+1]),newLerp, colorSpace, start_, end, ease)
+   var newC = lerpColor2(color(this.colorList[stop]),color(this.colorList[stop+1]),newLerp, colorSpace, start_, end,type, ease)
    return newC;
   }
 

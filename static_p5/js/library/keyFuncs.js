@@ -15,7 +15,7 @@ function keyTyped() {
   } else if (key === 'f') {
     let fs = fullscreen();
     fullscreen(!fs);
-}else if (key === 's') {
+}else if (key === 'S') {
   saveCanvas();
 } else if (key === 'e') {
   exportParams();

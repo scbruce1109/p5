@@ -7,7 +7,7 @@ function preload() {
   if(loadColor){
     params = loadJSON(dataURL + "spec_colors.json");
   }
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\I'm Still Standing - Elton John.txt");
+  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Can't Help Falling In Love - Elvis Presley.txt");
   // result = loadStrings(dataURL + "It's Possible - Piero Piccioni.txt");
 }
 
@@ -54,7 +54,7 @@ console.log(hexList)
   cPalette.mapColor(1.0);
 
 
-  lType = QUADRATIC_;
+  lType = LINEAR_;
   ease = EASE_IN;
   flip = true;
 

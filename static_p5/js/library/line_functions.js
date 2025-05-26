@@ -308,8 +308,6 @@ class PolyLine{
       newPoints.push(this.points[i]);
       newPoints.push(p5.Vector.lerp(this.points[i],this.points[i+1],0.5))
       if (i == this.points.length-2){
-        console.log('hey i')
-        console.log(i)
         newPoints.push(this.points[i+1])
       }
     }

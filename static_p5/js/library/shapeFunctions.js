@@ -40,10 +40,66 @@ function generateArc(xloc, yloc, rad1, rad2, angle, offsetAngle){
 }
 
 class myShape {
-  constructor(pointsList,line){
+  constructor(pointsList,close){
     this.points = pointsList;
-    if (line){
-      this.line = true;
+    if (close){
+      this.close = true;
+    }
+  }
+
+  calcLength(){
+    var d = 0;
+    for (let i = 0;i<this.points.length-1;i++){
+      var segD = this.points[i+1].dist(this.points[i])
+      d += segD
+    }
+    this.length = d
+  }
+
+  subdivide(numSubdivisions){
+    if (!numSubdivisions){
+      numSubdivisions = 1;
+    }
+    var newPoints = []
+    for (let i = 0;i<this.points.length-1;i++){
+      newPoints.push(this.points[i]);
+      newPoints.push(p5.Vector.lerp(this.points[i],this.points[i+1],0.5))
+      if (i == this.points.length-2){
+        newPoints.push(this.points[i+1])
+      }
+    }
+    if (this.close){
+      newPoints.push(p5.Vector.lerp(this.points[this.points.length-1],this.points[0],0.5))
+    }
+    this.points = newPoints;
+  }
+
+  offsetPoints(amount,preserveEnds){
+    var newPoints = [];
+    // if (!preserveEnds){
+    //   var start = 1;
+    //   var end = this.points.length-1;
+    // } else {
+    //   newPoints.push(this.points[0])
+    //   var start = 1;
+    //   var end = this.points.length-1;
+    // }
+    for (let i = 0;i<this.points.length-1;i++){
+      var segAngle = getAngle(this.points[i],this.points[i+1])
+      var orthAngle = segAngle + PI/2
+      var a = random(-amount,amount)
+      var x = this.points[i].x + cos(orthAngle) * a;
+      var y = this.points[i].y + sin(orthAngle) * a;
+      newPoints.push(createVector(x,y))
+
+    }
+    newPoints.push(this.points[this.points.length-1])
+    this.points = newPoints
+  }
+
+  smoothChaikin(depth){
+    for (let i = 0;i<depth;i++){
+      this.points = chaikinSmooth(this.points)
     }
   }
 
@@ -52,13 +108,15 @@ class myShape {
     for (let i=0;i<this.points.length;i++){
       vertex(this.points[i].x, this.points[i].y);
     }
-    if (! this.line){
+    if (this.close){
     endShape(CLOSE);
   }
   else {
     endShape();
   }
   }
+
+
 }
 
 function ringArcs(locx, locy, radius1, radius2, numSegs, spacer){
@@ -383,64 +441,80 @@ function fillPoly(pPoints,numPoints){
 //
 // }
 
-function makeRect(center,width_,height_,dMode){
-  var ps = [
-    createVector(center.x - width_/2,center.y - height_/2),
-    createVector(center.x + width_/2,center.y - height_/2),
-    createVector(center.x + width_/2,center.y + height_/2),
-    createVector(center.x - width_/2,center.y + height_/2),
-  ]
-  var rec = new Mesh(center,ps,dMode)
-  rec.edges = [
-    [0,1],
-    [1,2],
-    [2,3],
-    [3,0]
-  ]
-  rec.faces = [[0,1,2,3]]
-  // rec.display('e')
-  return rec;
-}
+// function makeRect(center,width_,height_,dMode){
+//   var ps = [
+//     createVector(center.x - width_/2,center.y - height_/2),
+//     createVector(center.x + width_/2,center.y - height_/2),
+//     createVector(center.x + width_/2,center.y + height_/2),
+//     createVector(center.x - width_/2,center.y + height_/2),
+//   ]
+//   var rec = new Mesh(center,ps,dMode)
+//   rec.edges = [
+//     [0,1],
+//     [1,2],
+//     [2,3],
+//     [3,0]
+//   ]
+//   rec.faces = [[0,1,2,3]]
+//   // rec.display('e')
+//   return rec;
+// }
+//
+//
+// function makeBox(center,width_,height_,girth,dmode){
+//   var ps = [
+//     createVector(center.x - width_/2,center.y - height_/2,center.z + girth/2),
+//     createVector(center.x + width_/2,center.y - height_/2,center.z + girth/2),
+//     createVector(center.x + width_/2,center.y + height_/2,center.z + girth/2),
+//     createVector(center.x - width_/2,center.y + height_/2,center.z + girth/2),
+//     createVector(center.x - width_/2,center.y - height_/2,center.z - girth/2),
+//     createVector(center.x + width_/2,center.y - height_/2,center.z - girth/2),
+//     createVector(center.x + width_/2,center.y + height_/2,center.z - girth/2),
+//     createVector(center.x - width_/2,center.y + height_/2,center.z - girth/2),
+//   ]
+//   var boxx = new Mesh(center,ps,dmode)
+//   boxx.edges = [
+//     [0,1],
+//     [1,2],
+//     [2,3],
+//     [3,0],
+//     [0,4],
+//     [1,5],
+//     [2,6],
+//     [3,7],
+//     [4,5],
+//     [5,6],
+//     [6,7],
+//     [7,4]
+//   ]
+//   boxx.faces = [[0,1,2,3]]
+//   // rec.display('e')
+//   return boxx;
+// }
 
+// function arrayOnLine(mesh,p1,p2,num){
+//   var t = 1 / num;
+//   var meshArray = []
+//   for (let i = 0;i<num;i++){
+//     var newP = p5.Vector.lerp(p1,p2,t*i)
+//     var meshCopy = mesh.copy();
+//     meshCopy.translate(p5.Vector.sub(newP,p1))
+//     meshArray.push(meshCopy)
+//   }
+//   return meshArray;
+// }
 
-function makeBox(center,width_,height_,girth,dmode){
-  var ps = [
-    createVector(center.x - width_/2,center.y - height_/2,center.z + girth/2),
-    createVector(center.x + width_/2,center.y - height_/2,center.z + girth/2),
-    createVector(center.x + width_/2,center.y + height_/2,center.z + girth/2),
-    createVector(center.x - width_/2,center.y + height_/2,center.z + girth/2),
-    createVector(center.x - width_/2,center.y - height_/2,center.z - girth/2),
-    createVector(center.x + width_/2,center.y - height_/2,center.z - girth/2),
-    createVector(center.x + width_/2,center.y + height_/2,center.z - girth/2),
-    createVector(center.x - width_/2,center.y + height_/2,center.z - girth/2),
-  ]
-  var boxx = new Mesh(center,ps,dmode)
-  boxx.edges = [
-    [0,1],
-    [1,2],
-    [2,3],
-    [3,0],
-    [0,4],
-    [1,5],
-    [2,6],
-    [3,7],
-    [4,5],
-    [5,6],
-    [6,7],
-    [7,4]
-  ]
-  boxx.faces = [[0,1,2,3]]
-  // rec.display('e')
-  return boxx;
-}
-
-function arrayOnLine(mesh,p1,p2,num){
+function arrayOnLine(mesh,line,num){
   var t = 1 / num;
   var meshArray = []
   for (let i = 0;i<num;i++){
-    var newP = p5.Vector.lerp(p1,p2,t*i)
+    var newP = line.lerpLine(t*i,true)
     var meshCopy = mesh.copy();
-    meshCopy.translate(p5.Vector.sub(newP,p1))
+    meshCopy.translate(p5.Vector.sub(newP[0],line.origin))
+    var segA = getAngle3D(line.faces[0][newP[1]],newP[0])
+
+    // meshCopy.rotate(radians(segA[0]+0),'x')
+    meshCopy.rotate(radians(segA[1]),'z')
     meshArray.push(meshCopy)
   }
   return meshArray;

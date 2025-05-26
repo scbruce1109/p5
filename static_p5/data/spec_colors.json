@@ -35,5 +35,10 @@
     "#ff2300",
     "#fffef2"
     ],
-    "cType": "HSB"}
+    "cType": "HSB"},
+    {"name": "black","colors": [
+      "#ffffff",
+      "#000000"
+      ],
+      "cType": "RGB"}
 ]

@@ -2,7 +2,7 @@ var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette, 
 
 var loadParams = true;
 var loadColor = true;
-var colName = 'heat'
+var colName = 'viridis'
 
 var params = {
   name: "It's Possible",
@@ -35,7 +35,7 @@ function preload() {
 function setup() {
   scale = 1;
   createCanvas(900, 600);
-  background(20)
+  // background(255)
 
   if (colors){
     colors = Object.values(colors)
@@ -144,8 +144,11 @@ var spectrum = json[n].reverse()
 
      var newC = cPalette.mapColor(map(json[n][i],0,255,startl,endl),cType,null,null,lType,ease,1); //// RGB with quadratic is also good
      // var newC = color(0,0,0)
-      var alph = map2(spectrum[i],0,255, 0, 0.2, QUADRATIC_, EASE_IN_OUT)
-     newC.setAlpha(alph)
+     if (spectrum[i] == 0){
+       newC.setAlpha(0)
+     }
+     //  var alph = map2(spectrum[i],0,255, 0, 0.5, LINEAR_, EASE_IN_OUT)
+     // newC.setAlpha(alph)
      strokeWeight(step*scale*2);
      // colorMode(RGB,255,255,255,255);
      // colorMode(RGB,255,255,255,255);

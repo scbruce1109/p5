@@ -3,7 +3,7 @@ var lineMesh,sphereMesh,sphereMesh2,m,rec,v,v1,shapes,recp,sphe,sphe2;
 var tings,movers, horz, line1, line2,rec2;
 
 loadParams = false;
-var paramName = 'up'
+var paramName = 'building'
 
 var params = {
   noiseSeed: 0,
@@ -27,7 +27,7 @@ function preload() {
 
 function setup() {
   w = ''
-  createCanvas(600, 900);
+  createCanvas(900, 900);
   background(255);
 
   movers = [];
@@ -48,9 +48,12 @@ function setup() {
 
   line1 = [createVector(0,0,0),createVector()]
 
-  rec = new Mesh(createVector(0,0,0),[recp])
-  rec.translate(createVector(100,200,200))
-  rec.rotate(radians(90),'x')
+  // rec = new Ellipse3D(createVector(0,0,0),500,500,40)
+  console.log('rec')
+  console.log(rec)
+
+  // rec.translate(createVector(100,200,200))
+  // rec.rotate(radians(45),'y')
 
   // rec2 = makeRect(createVector(0,0,0),500,500,true)
   var tt = [
@@ -58,7 +61,39 @@ function setup() {
     createVector(0,0,300),
     createVector(300,300,700)
   ]
-  rec2 = new Mesh(createVector(0,0,0),[tt],false,true)
+  shapes = [];
+  var p = pointOnGround(ging, random(-30,30),random(50000))
+  var p2 = pointOnGround(ging, random(-30,30),random(50000))
+  p2[1].z = 0
+  var p3 = pointOnGround(ging, random(-30,30),random(50000))
+  rec = new Line3D([p[1],p2[1],p3[1]])
+  rec.smoothChaikin(6)
+  var ps = rec.randomPoints(200);
+  for (let j=0;j<ps.length;j++){
+    var r = new Box3D(ps[j],200,200,random(4000),true)
+    // r.rotate(radians(90),'x')
+    shapes.push(r)
+
+  }
+
+  for (let i = 0;i<100;i++){
+    var d = random(100,50000)
+    var p = pointOnGround(ging, -30,d)
+    var p2 = pointOnGround(ging, 30,d)
+    var line = new Line3D([p[1],p2[1]])
+    var ps = line.randomPoints(20);
+    for (let j=0;j<ps.length;j++){
+      var r = new Rect3D(ps[j],100,50)
+      // r.rotate(radians(90),'x')
+      shapes.push(r)
+
+    }
+    // recc.display(ging)
+    shapes.push(line)
+  }
+  console.log(shapes)
+  rec2 = new Box3D(createVector(0,2000,0),200,200,400,true)
+
   // rec2.rotate(radians(90),'x')
   // rec.rotate(radians(45),'z')
 //   for (let i =0;i<1000;i++){
@@ -69,26 +104,19 @@ function setup() {
 
 
   horz = fovWidth(ging,500000)
-  console.log('horz')
-  console.log(horz)
 
-  shapes = arrayOnLine(rec,createVector(0,0,0),createVector(0,0,4000),20)
 
-  console.log('shapes')
-  console.log(shapes)
+  // shapes = arrayOnLine(rec,createVector(0,0,0),createVector(0,0,4000),8)
+
+
   var rott = 0
 
-
-
-
-  console.log('shape')
-  console.log(sphe)
 
 zoob = pointOnGround(ging,0,10000)
 tings = [v,zoob];
   // ging.initWorld(w)
-  console.log('uhhh')
-  console.log(ging.location.copy())
+  // console.log('uhhh')
+  // console.log(ging.location.copy())
   ging.displayHL()
 
   fill(200,0,0,100)
@@ -99,7 +127,8 @@ tings = [v,zoob];
 }
 
 function draw() {
-  background('#ffe8b2');
+  // background('#ffe8b2');
+  background(255)
   strokeWeight(1)
   stroke(0,100);
 
@@ -133,24 +162,27 @@ function draw() {
   var hl = ging.displayHL();
   // rec.rotate(radians(1),'z')
   noFill()
+  rec.display(ging)
   fill(200,0,0,40)
+  stroke(200,0,0,40)
   // sphe2.display(ging)
   // noStroke()
-  rec.display(ging)
-  noFill();
-  rec2.display(ging);
+
+  // noFill();
+  // rec2.display(ging);
 //
 // sphe.display(ging)
-
+// noFill()
 for (let i = 0;i<shapes.length;i++){
   shapes[i].display(ging)
+  // console.log('hye')
 }
 // ellipse(ging.project([v])[0].x,ging.project([v])[0].y,20,20)
 var lineps = [v]
 lineps = ging.project(horz)
 // console.log(lineps)
 var zink = new PolyLine(lineps)
-stroke(0)
+// stroke(0)
 zink.display()
 noStroke();
 ellipse(lineps[0].x,lineps[0].y,10,10)
