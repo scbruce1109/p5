@@ -1,4 +1,4 @@
-var e,r,e2,r2,g1,shapes,s;
+var e,r,e2,r2,g1,shapes;
 
 loadParams = false;
 var paramName = 'building'
@@ -25,7 +25,7 @@ function preload() {
 
 function setup() {
   w = ''
-  createCanvas(900, 900);
+  createCanvas(600, 900);
   background('#ffffff');
 
   g1 = new ColorGrid(0,0,width,height,5);
@@ -39,54 +39,17 @@ function setup() {
   ging = new Camera(0,0,width,height,60,createVector(params.locationX,params.locationY,params.locationZ),{x:params.rotationX,y:params.rotationY,z:params.rotationZ});
 
   var zook = spherePoints(createVector(0,0,0),100,10)
-  // for (let i = 0;i<zook.length;i++){
-  //   // var p = placePoint3D(createVector(0,0,0),random(360),random(360),500);
-  //   var p = zook[i]
-  //   e = new Sphere3D(p,50)
-  //   shapes.push(e);
-  // }
-
-  for (let i = 0;i<1000;i++){
-    var p = pointOnGround(ging,random(-30,30),random(10000))[1]
-    // var p = placePoint3D(createVector(0,0,0),random(360),random(360),200);
-    console.log(p)
-    var o = new Rect3D(p,5,100,false)
-    o.rotate(radians(90),'x')
-    shapes.push(o)
-  // shapes.push(new Sphere3D(p,10))
+  for (let i = 0;i<zook.length;i++){
+    // var p = placePoint3D(createVector(0,0,0),random(360),random(360),500);
+    var p = zook[i]
+    e = new Sphere3D(p,50)
+    shapes.push(e);
   }
 
   // r = new Box3D(createVector(0,0,0),100,100,100)
   r = new Sphere3D(createVector(0,0,0),50)
   r2 = new Mover3D(createVector(0,0,0),10,r)
 
-  // e = new Ellipse3D(createVector(0,0,0),100,100,20);
-  // e2 = new Ellipse3D(createVector(0,0,0),100,100,20);
-  //
-  // e2.rotate(radians(20),'x' )
-  //
-  // var date = new Date("August 7, 1997")
-  // console.log(dateTimeToJulian(date) - 2451545.0)
-  // var ll = meanLongOfSun(-877.04167)
-  // var gg = meanAnomolyOfSun(-877.04167)
-  //
-  // var long = eclipticLongOfSun(ll,gg) + 720
-  // // console.log(long+720)
-  //
-  // var obl = obliquityOfEcliptic(-877.04167)
-  // console.log(obl)
-  //
-  // var ra = getRightAscension2(obl,long)
-  // console.log(ra)
-  //
-  // var prax = cos(radians(ra)) * 100
-  // var pray = sin(radians(ra)) * 100;
-  //
-  // var p = createVector(prax,pray,0)
-  //
-  // s = new Sphere3D(p,20);
-
-  // console.log(getEclipticCoordinates())
   // e = new Ellipse3D(createVector(0,1000,0),100,100,20)
 }
 
@@ -95,12 +58,9 @@ function draw() {
   // background(0,0,40)
   strokeWeight(1)
   stroke(0,100);
-  noStroke();
 
-  // fill(255)
+  fill(255,80)
     // e.display(ging)
-    // e2.display(ging)
-    // s.display(ging);
     // noFill();
     // r.display(ging);
 
@@ -109,22 +69,13 @@ function draw() {
 
     foopforce.add(dingforce)
     r2.addForce(foopforce)
-    // r2.display(ging)
+    r2.display(ging)
     // e2.display(ging)
 
     var hl = ging.displayHL();
 
-  var sorted = sortPoints(shapes,ging)
-  console.log(sorted)
-  var range = (sorted[2] - sorted[1])/4
-
-  for (let i = 0;i<sorted[0].length;i++){
-
-    var d = p5.Vector.dist(sorted[0][i].center,ging.location);
-    var c = lerpColor(color(255),color('#ffe8b2'),Math.abs(d/range))
-    console.log(d/range)
-    fill(c)
-    sorted[0][i].display(ging)
+  for (let i = 0;i<shapes.length;i++){
+    shapes[i].display(ging)
     // console.log('hye')
   }
 
@@ -155,6 +106,18 @@ function draw() {
   ging.rotate(w,-.5,0,0)
   }
 }
+// noFill();
+// noStroke();
+
+
+
+  // fill(0)
+  // text("x: " + ging.rotation.x.toString(),50,50)
+  // text("z: " +ging.rotation.z.toString(),50,75)
+  // text("Cam location",50,100)
+  // text("X: " + (ging.location.x ).toString(),50,120)
+  // text("Y: " + (ging.location.y ).toString() ,50,140)
+  // text("Z: " + (ging.location.z ).toString(),50,160)
 
   params.locationX = ging.location.x;
   params.locationY = ging.location.y;

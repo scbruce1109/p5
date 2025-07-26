@@ -1,4 +1,4 @@
-var e,r,e2,r2,g1,shapes,s;
+var e,r,e2,r2,g1,g2,s;
 
 loadParams = false;
 var paramName = 'building'
@@ -7,7 +7,7 @@ var params = {
   noiseSeed: 0,
   locationX: 0,
   locationY: -1000,
-  locationZ: -0,
+  locationZ: 200,
   rotationX: 0,
   rotationY: -0,
   rotationZ: 0
@@ -28,105 +28,103 @@ function setup() {
   createCanvas(900, 900);
   background('#ffffff');
 
+  var cp1 = [
+    '#5bb3f6',
+    '#edf0fe',
+    // '#f89d5f'
+  ]
+
   g1 = new ColorGrid(0,0,width,height,5);
+  g2 = new ColorGrid(0,0,width,height,5);
 
   movers = [];
   params.noiseSeed = 88767.3074244767
 
+  pPoints = [
+    createVector(random(width),random(height)),
+    createVector(random(width),random(height)),
+    createVector(random(width),random(height)),
+    createVector(random(width),random(height))
+  ]
+
+  pPoints[3].mass = 2
+  pPoints[1].mass = 2
 
   noiseSeed(params.noiseSeed)
-  shapes = []
   ging = new Camera(0,0,width,height,60,createVector(params.locationX,params.locationY,params.locationZ),{x:params.rotationX,y:params.rotationY,z:params.rotationZ});
 
-  var zook = spherePoints(createVector(0,0,0),100,10)
-  // for (let i = 0;i<zook.length;i++){
-  //   // var p = placePoint3D(createVector(0,0,0),random(360),random(360),500);
-  //   var p = zook[i]
-  //   e = new Sphere3D(p,50)
-  //   shapes.push(e);
-  // }
-
-  for (let i = 0;i<1000;i++){
-    var p = pointOnGround(ging,random(-30,30),random(10000))[1]
-    // var p = placePoint3D(createVector(0,0,0),random(360),random(360),200);
-    console.log(p)
-    var o = new Rect3D(p,5,100,false)
-    o.rotate(radians(90),'x')
-    shapes.push(o)
-  // shapes.push(new Sphere3D(p,10))
+  g1.fillGradient(cp1)
+  g2.fillColor([color("#fefefe"),color("#feaca4"),color("#d4fdff"),color("#fec375")],pPoints,300,g1)
+  // g1.display();
+  // g2.jitterGrid(5)
+  g2.display()
+  for (let i =0;i<1000;i++){
+    // var p = placePoint(createVector(width/2,height/2),200,false)
+    var p = createVector(random(width),random(height))
+    var c1 = g2.getValue(p.x,p.y).c
+    c1.setAlpha(0.3)
+    fill(c1);
+    noStroke();
+    // rect(random(width),random(height),random(100),random(100))
+    var zoop = generatePoints(p.x, p.y,random(200),random(200),Math.floor(random(3,8)))
+    var ding = new myShape(zoop,true)
+    ding.offsetPoints(random(50))
+    ding.subdivide(2)
+    // console.log(ding.points)
+    ding.offsetPoints(random(20))
+    ding.subdivide(2)
+    // console.log(ding.points)
+    ding.offsetPoints(random(50))
+    // var c1 = g1.getValue(bgGrid.points[i][j].x,bgGrid.points[i][j].y).c
+    // c1.
+    ding.smoothChaikin(2)
+    ding.offsetPoints(random(5))
+    ding.smoothChaikin(2)
+    ding.offsetPoints(random(10))
+    // ding.smoothChaikin(2)
+    ding.display()
   }
 
-  // r = new Box3D(createVector(0,0,0),100,100,100)
-  r = new Sphere3D(createVector(0,0,0),50)
-  r2 = new Mover3D(createVector(0,0,0),10,r)
 
-  // e = new Ellipse3D(createVector(0,0,0),100,100,20);
-  // e2 = new Ellipse3D(createVector(0,0,0),100,100,20);
-  //
-  // e2.rotate(radians(20),'x' )
-  //
-  // var date = new Date("August 7, 1997")
-  // console.log(dateTimeToJulian(date) - 2451545.0)
-  // var ll = meanLongOfSun(-877.04167)
-  // var gg = meanAnomolyOfSun(-877.04167)
-  //
-  // var long = eclipticLongOfSun(ll,gg) + 720
-  // // console.log(long+720)
-  //
-  // var obl = obliquityOfEcliptic(-877.04167)
-  // console.log(obl)
-  //
-  // var ra = getRightAscension2(obl,long)
-  // console.log(ra)
-  //
-  // var prax = cos(radians(ra)) * 100
-  // var pray = sin(radians(ra)) * 100;
-  //
-  // var p = createVector(prax,pray,0)
-  //
-  // s = new Sphere3D(p,20);
-
-  // console.log(getEclipticCoordinates())
+// var heighty = 0;
+//   for(let i = 0;i<300;i++){
+//     var ting = new PolyLine([createVector(0,heighty),createVector(width,heighty)])
+//     ting.subdivide()
+//
+//
+//     // ting.smoothChaikin(3)
+//     ting.displayWavy(5,5,g2,0.5)
+//     // ting.displayWavy(5,5,g2,0.5)
+//     // ting.displayWavy(5,5,g2,0.5)
+//
+//     heighty += 4
+//   }
   // e = new Ellipse3D(createVector(0,1000,0),100,100,20)
 }
 
 function draw() {
-  background('#ffe8b2');
+  // background('#ffe8b2');
   // background(0,0,40)
   strokeWeight(1)
   stroke(0,100);
-  noStroke();
 
-  // fill(255)
-    // e.display(ging)
-    // e2.display(ging)
-    // s.display(ging);
-    // noFill();
-    // r.display(ging);
+  randomWalker()
+  // var c = color('#fff8db')
+  // c.setAlpha(0.5)
+  // fill(c)
+  // for (let i = 0;i<r.length;i++){
+  //   r[i].display(ging)
+  //   // s[i].display(ging)
+  // }
+  // r2.display(ging)
 
-    var foopforce = createVector(0,0,1)
-    var dingforce = createVector(0,0,-1)
 
-    foopforce.add(dingforce)
-    r2.addForce(foopforce)
-    // r2.display(ging)
-    // e2.display(ging)
 
-    var hl = ging.displayHL();
 
-  var sorted = sortPoints(shapes,ging)
-  console.log(sorted)
-  var range = (sorted[2] - sorted[1])/4
 
-  for (let i = 0;i<sorted[0].length;i++){
 
-    var d = p5.Vector.dist(sorted[0][i].center,ging.location);
-    var c = lerpColor(color(255),color('#ffe8b2'),Math.abs(d/range))
-    console.log(d/range)
-    fill(c)
-    sorted[0][i].display(ging)
-    // console.log('hye')
-  }
+
+
 
 
   if (keyIsPressed === true) {
@@ -196,12 +194,23 @@ function keyPressed() {
   }
 }
 
-function projectPointToGround(point, altitude, azimuthA){
-  var v = p5.Vector.fromAngles(radians(altitude),radians(azimuthA))
-  var vMag = point.y / cos(radians(altitude))
-  v.setMag(vMag);
-  // v.x += point.x;
-  // v.z += point.z;
-  v.add(point)
-  return v;
+
+function randomWalker(steps){
+  var p = createVector(random(width),random(height))
+  var x = p.x
+  var y = p.y
+for (let i=0; i<20000; i++){
+
+
+
+
+    let xchange=random(-2,2);
+    let ychange=random(-2,2);
+    var c1 = g2.getValue(p.x,p.y).c
+    c1.setAlpha(0.02)
+    stroke(c1);
+    line(x,y,x+xchange,y+ychange);
+    x=x+xchange
+    y=y+ychange
+  }
 }

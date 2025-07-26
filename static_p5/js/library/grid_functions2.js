@@ -442,7 +442,8 @@ class VectorGrid extends Grid{
 
 class ColorGrid extends Grid{
 
-  fillGradient(paletteX,paletteY){
+  fillGradient(listColorsX,paletteY){
+    var paletteX = new colorPalette(listColorsX)
     for (let i = 0;i<this.grid.length;i++){
       for (let j = 0;j<this.grid[i].length;j++){
         var xVal = map(this.grid[i][j].y, this.y, this.y+this.height, 0,1);
@@ -454,8 +455,14 @@ class ColorGrid extends Grid{
   fillColor(listColors,listPoints,radius,defaultC){
     for (let i = 0;i<this.grid.length;i++){
       for (let j = 0;j<this.grid[i].length;j++){
+        if (defaultC.grid){
+          // console.log('weeeny')
+          var colorC = defaultC.getValue(this.grid[i][j].x,this.grid[i][j].y).c
+        } else {
+          var colorC = defaultC;
+        }
         // this.grid[i][j].angle = angleFromPoints(createVector(this.grid[i][j].x,this.grid[i][j].y),listAngles)
-        this.grid[i][j].c = colorFromPoints(createVector(this.grid[i][j].x,this.grid[i][j].y),listColors,listPoints,radius,defaultC)
+        this.grid[i][j].c = colorFromPoints(createVector(this.grid[i][j].x,this.grid[i][j].y),listColors,listPoints,radius,colorC)
         // this.grid[i][j].valueToAngle();
       }
     }

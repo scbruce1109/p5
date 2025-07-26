@@ -5,7 +5,7 @@ let radius = 100/2;
 let radius2 = 100/2;
 let angle1 = 0;
 let angle2 = 0;
-let interval = 20 ///10000000000 ///200000
+let interval = 1.5 ///10000000000 ///200000
 let accel = 0.1
 let dotColor;
 let ratio;
@@ -14,14 +14,14 @@ var cp;
 var scale
 
 
-var colors = ['#006ab3','#89c234']
+var colors = ['#89c234','#fdf339'] //'#89c234','#fdf339']
 
 
 function setup() {
 
-  let date1 = new Date("August 15, 1993");
+  let date1 = new Date("October 10, 1960");
   // let date2 = new Date("March 16, 1955");
-  let date2 = new Date("July 3, 1997");
+  let date2 = new Date("August 2, 1989");
   // let date2 = new Date("October 4, 1991");
   // let date2 = new Date("October 4, 1991");
   // let date2 = new Date("November 5, 1992");
@@ -55,8 +55,8 @@ function setup() {
     p2 = new p5.Vector(x2,y2);
 
     var d = p2.dist(createVector(width/2,height/2))
-    // var md = map(d,0,600*scale,0,1);
-    var md = map(p2.x,0,1400*scale,0,1);
+    var md = map(d,0,600*scale,0,1);
+    // var md = map(p2.x,0,1400*scale,0,1);
 
     var c = cp.mapColor(md, 'HSB', null, null, QUADRATIC_, null, null)
 

@@ -82,7 +82,7 @@ function getAngle(origin, endpoint){
   return theta;
 }
 
-function customLinePerlinNoise(origin, endpoint, randomAmount, step, scale_, color){
+function customLinePerlinNoise(origin, endpoint, randomAmount, step, scale_, color,alpha){
 
   if (! scale_){
     scale_ = 1;
@@ -116,7 +116,12 @@ function customLinePerlinNoise(origin, endpoint, randomAmount, step, scale_, col
 
     if (color){
       if (color.grid){
-      stroke(color.getValue(x,y).c)
+      var cc = color.getValue(x,y).c
+      if (alpha){
+        cc.setAlpha(alpha)
+      }
+
+      stroke(cc)
     } else{
       stroke(color)
     }
@@ -355,9 +360,9 @@ class PolyLine{
     }
   }
 
-  displayWavy(amount,step,color){
+  displayWavy(amount,step,color,alpha){
     for (let i = 0;i<this.points.length-1;i++){
-      customLinePerlinNoise(this.points[i], this.points[i+1], amount, step, 1, color)
+      customLinePerlinNoise(this.points[i], this.points[i+1], amount, step, 1, color,alpha)
     }
   }
 }

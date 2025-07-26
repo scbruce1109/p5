@@ -50,6 +50,7 @@ function setup() {
 
   // rec = new Ellipse3D(createVector(0,0,0),500,500,40)
   console.log('rec')
+  var jjd = dateTimeToJulian()
   console.log(rec)
 
   // rec.translate(createVector(100,200,200))
@@ -253,4 +254,12 @@ function projectPointToGround(point, altitude, azimuthA){
   // v.z += point.z;
   v.add(point)
   return v;
+}
+
+function dateTimeToJulian(date){
+  var date = new Date()
+  var d = date.getTime();
+  var jd = Math.floor((d / 86400000) + 2440587.5);
+  console.log(jd)
+  return jd;
 }

@@ -9,9 +9,16 @@ function threeDRandomWalk(startLoc, numSteps,stepSize){
 
 class Mover3D{
 
-  constructor(startLoc,topSpeed,startVelocity){
+  constructor(startLoc,topSpeed,mesh,startVelocity){
     this.location = startLoc;
     this.topSpeed = topSpeed;
+
+    if (mesh){
+      this.mesh = mesh;
+    } else {
+      this.mesh = false
+    }
+
     if (startVelocity){
       this.velocity = startVelocity;
     } else {
@@ -25,12 +32,39 @@ class Mover3D{
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.topSpeed);
     this.location.add(this.velocity);
+
+    if (this.mesh){
+      this.mesh.translate(this.velocity)
+    }
+  }
+
+  attract(mover, g){
+    if (! mover.mass){
+      mover.mass = 1;
+    }
+    if (! self.mass){
+      self.mass = 1;
+    }
+
+    if (!g){
+      g = 1;
+    }
+
+    var f = p5.Vector.sub(this.location, mover.location);
+    var d = force.mag();
+    var mag = (this.mass * mover.mass * g)/ d**2
+
+    f.setMag(mag)
+    return f
   }
 
   display(camera){
     var pp = camera.project([this.location])[0];
-
-    ellipse(pp.x,pp.y,2,2)
+    if (! this.mesh){
+    ellipse(pp.x,pp.y,20,20)
+  } else {
+    this.mesh.display(camera);
+  }
   }
 }
 
@@ -427,7 +461,7 @@ class Camera{
 
     this.rotMatrixX = rotateAroundPoint(this.sp2,-radians(this.rotation.x),'x')/// switched
     this.rotMatrixY = rotateAroundPoint(this.sp2, radians(this.rotation.y),'y')/// switched
-    this.displayHL()
+    // this.displayHL()
   }
 
 translate(world, v){
@@ -860,6 +894,12 @@ class Line3D extends Mesh{
     }
     return points;
   }
+
+  copy(){
+    var copy = new Line3D(this.faces[0].slice())
+
+    return copy
+  }
 }
 
 
@@ -883,13 +923,32 @@ function getAngle3D(p1,p2){
   return [-degrees(angleX)+90,-degrees(angleY)]
 }
 
-class Sphere3D{
+class Sphere3D extends Mesh{
   constructor(center,radius){
+    super();
     this.radius = radius;
     this.center = center;
+    this.verts = [];
+    this.faces = [];
+    this.rotation = {x:0,y:0,z:0}
+  }
+
+  copy(){
+    // var newFaces = [];
+    // for (let i = 0;i<this.faces.length;i++){
+    //   newFaces.push(this.faces[i].slice())
+    // }
+    var copy = new Sphere3D(this.center.copy(),this.radius)
+    // copy.rotation = this.rotation;
+  //   if (this.verts){
+  //   copy.verts = this.verts.slice()
+  // }
+    return copy
   }
 
   display(camera){
+    // super();
+    // console.log('wee')
     // v1 = p5.Vector.fromAngles(radians(90), radians(90-camera.rotation.z),-this.radius)
     // var v1 = p5.Vector.fromAngles(radians(90), radians(90-camera.rotation.z+90),this.radius)
     var v1 = p5.Vector.fromAngles(radians(camera.rotation.x),-radians(camera.rotation.z),this.radius)
@@ -899,4 +958,51 @@ class Sphere3D{
   var  projected = camera.project([this.center,v2])
     ellipse(projected[0].x,projected[0].y,projected[1].y-projected[0].y,projected[1].y-projected[0].y)
   }
+
+  // copy(){
+  //   return new Sphere3D()
+  // }
+}
+
+function spherePoints(center,radius,numPoints){
+  var u = 2*PI / numPoints
+  var v = PI/2
+
+  var points = [];
+  for (let i = 0;i<numPoints;i++){
+    // var u = random(2*PI);
+    // var v = random(PI);
+  var x = center.x + sin(v ) * cos(u*i ) * radius
+  var y = center.y + sin(v  ) * sin(u *i ) * radius
+  var z = center.z + cos(v) * radius
+  points.push(createVector(x,y,z))
+}
+
+  return points;
+}
+
+function sortPoints(meshes, camera){
+  var ascending = meshes.sort((a, b) => p5.Vector.dist(b.center,camera.location) - p5.Vector.dist(a.center,camera.location))
+
+  var min = p5.Vector.dist(ascending[0].center,camera.location);
+  var max = p5.Vector.dist(ascending[ascending.length-1].center,camera.location)
+  // var d = -99999
+  // var ds = []
+  // for (let i = 0;i<ascending.length;i++){
+  //   var d2 = p5.Vector.dist(ascending[i].center,camera.location)
+  //   ds.push(d2)
+  //   // if ( d2 > d){
+  //   //   d = d2;
+  //   // }
+  // }
+  return [ascending,min,max]
+}
+
+function noise3D1(v){
+  var x = -map(noise(v.x*0.002),0,1,-1,1);
+  var y = map(noise(v.y*0.002),0,1,-1,1);
+  var z = -map(noise(v.z*0.002),0,1,-1,1)
+  // var z = 0;
+
+  return createVector(x,y,z)
 }
