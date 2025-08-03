@@ -3,10 +3,10 @@ function setup(){
   background(255);
 
   var zoop = generatePoints(width/2, height/2,200,300,6)
-fill(0,random(2,20))
-stroke(0,random(2,20))
+fill(0,0,150,random(2,20))
+stroke(0,0,150,random(2,20))
 // noStroke()
-for (let i =0;i<200;i++){
+for (let i =0;i<100;i++){
   var p = placePoint(createVector(width/2,height/2),500,false)
   var zoop = generatePoints(p.x, p.y,random(50),random(300),4,45)
   var ding = new myShape(zoop,true)

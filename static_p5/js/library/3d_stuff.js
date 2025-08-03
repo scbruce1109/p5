@@ -51,7 +51,7 @@ class Mover3D{
     }
 
     var f = p5.Vector.sub(this.location, mover.location);
-    var d = force.mag();
+    var d = f.mag();
     var mag = (this.mass * mover.mass * g)/ d**2
 
     f.setMag(mag)
@@ -643,15 +643,12 @@ class Mesh {
 
   translate(v){
     var tMatrix = translateMatrix(v.x,v.y,v.z);
-    console.log('woomp')
     if (this.verts){
       for (let i = 0;i<this.verts.length;i++){
-        console.log('woomp2')
         this.verts[i] = applyM(this.verts[i],tMatrix)
       }
     } else {
     for (let i =0;i<this.faces.length;i++){
-      console.log('woomp3')
       for (let j = 0;j<this.faces[i].length;j++){
       this.faces[i][j] = applyM(this.faces[i][j],tMatrix);
     }
@@ -847,9 +844,7 @@ class Line3D extends Mesh{
       var d = p5.Vector.dist(this.faces[0][i],this.faces[0][i+1])
       this.length += d;
       this.lengths.push(d);
-      console.log('weeewoo')
     }
-    console.log(this.lengths)
   }
 
   getAngle(lerpVal){
