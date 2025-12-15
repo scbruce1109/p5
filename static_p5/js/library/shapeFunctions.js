@@ -268,9 +268,7 @@ function fillPoly(pPoints,numPoints){
     var pp = createVector(random(bbb[0],bbb[1]),random(bbb[2],bbb[3]))
 
     if(inside(pp,pPoints)){
-      stroke(0,0,255,50)
-      fill(200,0,0,50)
-      ellipse(pp.x,pp.y,10,10)
+      point(pp.x,pp.y)
     }
 
 

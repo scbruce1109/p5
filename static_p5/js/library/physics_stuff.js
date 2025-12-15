@@ -5,7 +5,9 @@ function dateTimeToJulian(date){
   console.log(jd)
   return jd;
 }
-
+function daysSinceJ(jd){
+  return jd - 2451545
+}
 function meanLongOfSun(ndays){
   var l = 280.460 + 0.9856474 * ndays
   return l
@@ -39,7 +41,7 @@ function getEclipticCoordinates(date){
   var dist = distToSun(g);
   var epsilon = obliquityOfEcliptic(ndays);
 
-  return [eclipticLong,0,dist,obl]
+  return [eclipticLong,0,dist,epsilon]
 }
 
 function getRightAscension(epsilon, lambda){

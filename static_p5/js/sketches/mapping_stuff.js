@@ -49,9 +49,9 @@ class RandomGrowth{
   display(){
     for (let i = 0;i<this.points.length;i++){
       // point(this.points[i].x, this.points[i].y);
-      fill(0,10);
+      fill(0,1);
       noStroke();
-      ellipse(this.points[i].x, this.points[i].y,random(8),random(8));
+      ellipse(this.points[i].x, this.points[i].y,random(2),random(2));
     }
   }
 

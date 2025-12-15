@@ -39,10 +39,10 @@ function setup() {
 
   g1 = new ColorGrid(rectp[0],rectp[1],params.rect2Width,params.rect2Height,5);
   g2 = new ColorGrid(0,0,width,height,5);
-  g2.fillGradient(cp2)
+  g2.fillGradient(params.rectCP1)
   // g1 = new NewGrid(0,0,width,height,5);
   // g1.fillNoise(0.006)
-  g1.fillGradient(cp)
+  g1.fillGradient(params.rectCP2)
   g2.display();
   g2.jitterGrid(2)
   g1.display()

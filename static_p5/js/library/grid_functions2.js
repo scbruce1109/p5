@@ -77,6 +77,20 @@ function newAngleFromPoints(location,listPoints, radius){
 
 }
 
+function angleFromPoints2(location,listPoints, radius){
+
+  var vals = [];
+  // var weights = idwWeights(location, listPoints, radius,false,true)
+  var weights = idw5(location, listPoints, radius,false,true)
+  for (let i = 0;i < listPoints.length;i++){
+    var val = getAngle(location,listPoints[i])
+    vals.push(val)
+  }
+
+  return meanAngle(vals,weights)+PI/2;
+
+}
+
 function colorFromPoints(location, colors, listPoints, radius, defaultC){
   var vals = [];
   var weights = idw5(location, listPoints, radius,true,defaultC);
@@ -428,6 +442,21 @@ class VectorGrid extends Grid{
     }
   }
 
+  fillAngle(listAngles){
+    for (let i = 0;i<this.grid.length;i++){
+      for (let j = 0;j<this.grid[i].length;j++){
+
+        // this.grid[i][j].angle = angleFromPoints(createVector(this.grid[i][j].x,this.grid[i][j].y),listAngles)
+
+        this.grid[i][j].a = angleFromPoints2(createVector(this.grid[i][j].x,this.grid[i][j].y),listAngles,150)
+        this.grid[i][j].v = p5.Vector.fromAngle(this.grid[i][j].a)
+
+        // this.grid[i][j].valueToAngle();
+      }
+    }
+
+  }
+
   display(){
     stroke(0);
     for (let i = 0; i<this.grid.length;i++){
@@ -535,8 +564,8 @@ class Mover1 {
 
   display(fillC){
     if (! fillC){
-    fill(255,50);
-    stroke(0,50);
+    // fill(255,50);
+    // stroke(0,50);
   } else {
     // alpha(fillC,0.2)
     fill(fillC)

@@ -52,6 +52,7 @@ class Mover3D{
 
     var f = p5.Vector.sub(this.location, mover.location);
     var d = f.mag();
+    d = constrain(d,1,5);
     var mag = (this.mass * mover.mass * g)/ d**2
 
     f.setMag(mag)
@@ -61,22 +62,22 @@ class Mover3D{
   display(camera){
     var pp = camera.project([this.location])[0];
     if (! this.mesh){
-    ellipse(pp.x,pp.y,20,20)
+    ellipse(pp.x,pp.y,2,2)
   } else {
     this.mesh.display(camera);
   }
   }
 }
 
-class MySphere{
-  constructor(loc,radius,rotation){
-
-  }
-
-  displayPoints(){
-
-  }
-}
+// class MySphere{
+//   constructor(loc,radius,rotation){
+//
+//   }
+//
+//   displayPoints(){
+//
+//   }
+// }
 
 function placePointOnPlane(planePoints,xlerp,ylerp){
   var x1 = p5.Vector.lerp(planePoints[0],planePoints[1],xlerp);
@@ -86,8 +87,8 @@ function placePointOnPlane(planePoints,xlerp,ylerp){
 }
 
 function fovWidth(camera,distance){
-  var left = pointOnGround(camera,-25,distance)
-  var right = pointOnGround(camera,25,distance);
+  var left = pointOnGround(camera,-30,distance)
+  var right = pointOnGround(camera,30,distance);
   return [left[1],right[1]]
 }
 
@@ -153,8 +154,39 @@ class Polygon_3D{
   }
 }
 
-class Grid_2D{
-  constructor(){
+class Grid2D{
+  constructor(startPoint,sizeX,sizeY,spacing){
+    this.g = new Grid(startPoint.x,startPoint.y,sizeX,sizeY,spacing)
+    this.grid = this.g.grid
+    this.start = startPoint
+    this.spacing = spacing
+    this.center = createVector(startPoint.x + sizeX/2*spacing,startPoint.y + sizeY/2*spacing,startPoint.z)
+    this.rects = [];
+    for (let i = 0; i<this.grid.length;i++){
+      for (let j = 0; j<this.grid[i].length;j++){
+        var r = new Rect3D(createVector(this.grid[i][j].x,this.grid[i][j].y,startPoint.z),this.spacing,this.spacing);
+        this.rects.push(r)
+      }
+    }
+  }
+
+  display(){
+    this.grid.display();
+  }
+
+  rotate(angle,axis){
+    for (let i = 0;i<this.rects.length;i++){
+      this.rects[i].rotate(angle, axis, this.start)
+    }
+  }
+
+  displayProjected(camera){
+    for (let i = 0;i<this.rects.length;i++){
+      this.rects[i].display(camera)
+    }
+  }
+
+  placeMovers(){
 
   }
 }
@@ -486,6 +518,11 @@ function translateMatrix(x,y,z){
   return t
 }
 
+function scaleMatrix(x,y,z){
+  var t = math.matrix([[x, 0, 0, 0], [0, y,0, 0], [0, 0, z,0],[0,0,0,1]])
+  return t
+}
+
 function rotateMatrix(angle, axis){
   var r;
   if (axis == 'x'){
@@ -506,6 +543,15 @@ function rotateAroundPoint(pointVector, angle, axis){
   // var transformed = math.multiply(translateMatrix(-pointVector.x,-pointVector.y), pMatrix)
   var rotated = math.multiply(rotateMatrix(angle, axis),translateMatrix(-pointVector.x,-pointVector.y,-pointVector.z))
   var final = math.multiply(translateMatrix(pointVector.x,pointVector.y,pointVector.z), rotated)
+  // var t = math.matrix([[1, 0, 7], [2, 5, 8], [3, 6, 9]])
+  return final;
+}
+
+function scaleAroundPoint(pointVector, scaleFactor){
+  // var pMatrix = [vector.x,vector.y,1]
+  // var transformed = math.multiply(translateMatrix(-pointVector.x,-pointVector.y), pMatrix)
+  var scaled = math.multiply(scaleMatrix(scaleFactor,scaleFactor,scaleFactor),translateMatrix(-pointVector.x,-pointVector.y,-pointVector.z))
+  var final = math.multiply(translateMatrix(pointVector.x,pointVector.y,pointVector.z), scaled)
   // var t = math.matrix([[1, 0, 7], [2, 5, 8], [3, 6, 9]])
   return final;
 }
@@ -533,8 +579,9 @@ class Mesh {
     this.rotation = {x:0,y:0,z:0}
   }
 
-  display(camera){
+  display(camera,raw){
     var projected,faceVerts;
+    var allVerts = [];
     if (this.verts){
       projected = camera.project(this.verts)
     }
@@ -544,6 +591,8 @@ class Mesh {
     } else {
       faceVerts = this.faces[f].map(i => projected[i])
     }
+
+    if (! raw){
       if (this.line){
         var pshape = new myShape(faceVerts,false)
       } else {
@@ -551,6 +600,21 @@ class Mesh {
       }
 
       pshape.display()
+    }
+      else {
+        allVerts.push(faceVerts)
+      }
+    }
+    return allVerts;
+  }
+
+  displayPoints(camera){
+    var pverts = this.display(camera,true)[0]
+
+    for (let i = 0;i<pverts.length;i++){
+      console.log(pverts[i])
+      point(pverts[i].x,pverts[i].y)
+      // ellipse(pverts[i].x,pverts[i].y,2,2)
     }
   }
 
@@ -618,8 +682,13 @@ class Mesh {
   //     }
   // }
 
-  rotate(angle,axis){
-    var rotMatrix = rotateAroundPoint(this.center, angle, axis);
+  rotate(angle,axis,altPoint){
+    if (altPoint){
+      var rotMatrix = rotateAroundPoint(altPoint, angle, axis);
+    } else {
+      var rotMatrix = rotateAroundPoint(this.center, angle, axis);
+    }
+
     if (this.verts){
       for (let i = 0;i<this.verts.length;i++){
         this.verts[i] = applyM(this.verts[i],rotMatrix)
@@ -632,13 +701,68 @@ class Mesh {
       }
       }
     }
-    if (axis = 'x'){
+    if (altPoint){
+      this.center = applyM(this.center,rotMatrix)
+    }
+    if (axis == 'x'){
       this.rotation.x += angle;
-    } else if (axis = 'y'){
+    } else if (axis == 'y'){
       this.rotation.y += angle;
     } else {
       this.rotation.z += angle;
+      console.log('yum')
     }
+  }
+
+  rotateLocal(angle,axis,altPoint){
+    var rotPoint = this.center;
+    var x,y,z = 0;
+    console.log(this.rotation)
+    if (altPoint){
+      rotPoint = altPoint
+    }
+    if (this.rotation.z != 0){
+      z = this.rotation.z
+      // var matrixZ = rotateAroundPoint(rotPoint, -this.rotation.z, 'z')
+      this.rotate(-z,'z')
+      console.log('yooob')
+    }
+    if (this.rotation.x != 0){
+      x = this.rotation.x
+      // var matrixX = rotateAroundPoint(rotPoint, -this.rotation.x, 'x')
+      this.rotate(-x,'x')
+      console.log('yooob')
+    }
+    if (this.rotation.y != 0){
+      y = this.rotation.y
+      // var matrixY = rotateAroundPoint(rotPoint, -this.rotation.y, 'y')
+      this.rotate(-y,'y')
+      console.log('yooob')
+    }
+    console.log(z)
+    this.rotate(angle,axis);
+
+    // if (y != 0){
+    //   // z = this.rotation.z
+    //   // var matrixZ = rotateAroundPoint(rotPoint, -this.rotation.z, 'z')
+    //   this.rotate(y,'y')
+    //   // console.log('yooob')
+    // }
+    if (z != 0){
+      // y = this.rotation.y
+      // var matrixY = rotateAroundPoint(rotPoint, -this.rotation.y, 'y')
+      this.rotate(z,'z')
+      console.log('weeeyy')
+    }
+    if (x != 0){
+      // x = this.rotation.x
+      // var matrixX = rotateAroundPoint(rotPoint, -this.rotation.x, 'x')
+      this.rotate(x,'x')
+      // console.log('yooob')
+    }
+
+    console.log(this.rotation)
+    return 0;
   }
 
   translate(v){
@@ -655,6 +779,21 @@ class Mesh {
     }
   }
     this.center = applyM(this.center,tMatrix)
+  }
+
+  scale(scaleFactor){
+    var tMatrix = scaleAroundPoint(this.center,scaleFactor);
+    if (this.verts){
+      for (let i = 0;i<this.verts.length;i++){
+        this.verts[i] = applyM(this.verts[i],tMatrix)
+      }
+    } else {
+    for (let i =0;i<this.faces.length;i++){
+      for (let j = 0;j<this.faces[i].length;j++){
+      this.faces[i][j] = applyM(this.faces[i][j],tMatrix);
+    }
+    }
+  }
   }
 
   // rotateMesh(angle, axis, p){
@@ -675,6 +814,21 @@ class Mesh {
   //   this.center = applyM(this.center,tMatrix)
   // }
 
+}
+
+function randomEllipsePoints(loc,radius,numPoints,startA,endA){
+  if (! startA){
+    startA = 0;
+    endA = 2*PI
+  }
+  points = []
+  for (let i = 0;i<numPoints;i++){
+    var t = random(startA,endA);
+    var x = loc.x + cos(t)*radius;
+    var y = loc.y +sin(t)*radius;
+    points.push(createVector(x,y,loc.z))
+  }
+  return points
 }
 
 class Rect3D extends Mesh{
@@ -704,6 +858,7 @@ class Rect3D extends Mesh{
   this.rotation = {x:0,y:0,z:0}
   }
 }
+
 
 class Box3D extends Mesh{
   constructor(center, width_, height_, girth, centerOnBase){
@@ -848,7 +1003,10 @@ class Line3D extends Mesh{
   }
 
   getAngle(lerpVal){
-
+    var index = this.lerpLine(lerpVal, true);
+    var a = getAngle3D(this.faces[0][index[1]],this.faces[0][index[1]+1])
+    a[2] = index[0];
+    return a
   }
 
   lerpLine(lerpVal,returnIndex){
@@ -874,6 +1032,24 @@ class Line3D extends Mesh{
   }
   }
 
+  subdivide(numSubdivisions){
+    if (!numSubdivisions){
+      numSubdivisions = 1;
+    }
+    for (let j = 0;j<numSubdivisions;j++){
+    var newPoints = []
+    for (let i = 0;i<this.faces[0].length-1;i++){
+      newPoints.push(this.faces[0][i]);
+      newPoints.push(p5.Vector.lerp(this.faces[0][i],this.faces[0][i+1],0.5))
+      if (i == this.faces[0].length-2){
+        newPoints.push(this.faces[0][i+1])
+      }
+    }
+    this.faces = [newPoints];
+  }
+  this.calcLength()
+  }
+
   smoothChaikin(depth){
     for (let i = 0;i<depth;i++){
       this.faces = [chaikinSmooth(this.faces[0])]
@@ -897,7 +1073,14 @@ class Line3D extends Mesh{
   }
 }
 
-
+function vectorFromAngles(altitude,azimuthA,mag){
+  var v = p5.Vector.fromAngles(radians(altitude+90),-radians(azimuthA))
+  var vc = createVector(v.x,v.z,v.y)
+  if (mag){
+    vc.setMag(mag)
+  }
+  return vc
+}
 
 function placePoint3D(p, altitude,azimuthA,r){
   var v = p5.Vector.fromAngles(radians(altitude+90),-radians(azimuthA))
@@ -906,8 +1089,8 @@ function placePoint3D(p, altitude,azimuthA,r){
 
   vc.setMag(r)
   vc.add(p);
-  console.log(v)
-  console.log(vc)
+  // console.log(v)
+  // console.log(vc)
   return vc;
 }
 
@@ -916,6 +1099,25 @@ function getAngle3D(p1,p2){
   var angleY = atan(dif.x / dif.y)
   var angleX = atan(createVector(dif.x,dif.y).mag()/dif.z)
   return [-degrees(angleX)+90,-degrees(angleY)]
+}
+
+// function getAngle3D(p1,p2){
+//   var dif = p5.Vector.sub(p2,p1);
+//   var angleY = atan(dif.x / dif.y)
+//   var angleX = atan(createVector(dif.x,dif.y).mag()/dif.z)
+//   return [-degrees(angleX)+90,-degrees(angleY)]
+// }
+
+function getAngle3D2(p1,p2){
+  var dif = p5.Vector.sub(p2,p1);
+  var xy = createVector(dif.x,dif.y)
+
+  var angleY = xy.heading()
+  var angleX = createVector(xy.mag(),dif.z).heading()
+
+  // var angleY = atan(dif.x / dif.y)
+  // var angleX = atan(createVector(dif.x,dif.y).mag()/dif.z)
+  return [degrees(angleX),degrees(angleY)-90]
 }
 
 class Sphere3D extends Mesh{
@@ -941,6 +1143,10 @@ class Sphere3D extends Mesh{
     return copy
   }
 
+  buildGlobe(numLat,numLong,numPoints){
+
+  }
+
   display(camera){
     // super();
     // console.log('wee')
@@ -954,19 +1160,37 @@ class Sphere3D extends Mesh{
     ellipse(projected[0].x,projected[0].y,projected[1].y-projected[0].y,projected[1].y-projected[0].y)
   }
 
+  collision(listSpheres, buffer){
+    if (!buffer){
+      buffer = 0;
+    }
+
+    var overlapping = false;
+
+    for (let i = 0;i<listSpheres.length;i++){
+      var other = listSpheres[i];
+      var d = dist(this.center.x,this.center.y,other.center.x,other.center.y);
+
+      if (d < this.radius + other.radius){
+        overlapping = true
+      }
+    }
+    return overlapping;
+  }
+
   // copy(){
   //   return new Sphere3D()
   // }
 }
 
 function spherePoints(center,radius,numPoints){
-  var u = 2*PI / numPoints
+  var u = 2*PI
   var v = PI/2
 
   var points = [];
   for (let i = 0;i<numPoints;i++){
-    // var u = random(2*PI);
-    // var v = random(PI);
+    var u = random(2*PI);
+    var v = random(0,PI);
   var x = center.x + sin(v ) * cos(u*i ) * radius
   var y = center.y + sin(v  ) * sin(u *i ) * radius
   var z = center.z + cos(v) * radius
@@ -976,11 +1200,18 @@ function spherePoints(center,radius,numPoints){
   return points;
 }
 
-function sortPoints(meshes, camera){
+function sortPoints(meshes, camera,movers){
+  if (! movers){
   var ascending = meshes.sort((a, b) => p5.Vector.dist(b.center,camera.location) - p5.Vector.dist(a.center,camera.location))
-
   var min = p5.Vector.dist(ascending[0].center,camera.location);
   var max = p5.Vector.dist(ascending[ascending.length-1].center,camera.location)
+} else {
+  var ascending = meshes.sort((a, b) => p5.Vector.dist(b.mesh.center,camera.location) - p5.Vector.dist(a.mesh.center,camera.location))
+  var min = p5.Vector.dist(ascending[0].mesh.center,camera.location);
+  var max = p5.Vector.dist(ascending[ascending.length-1].mesh.center,camera.location)
+}
+
+
   // var d = -99999
   // var ds = []
   // for (let i = 0;i<ascending.length;i++){

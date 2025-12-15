@@ -241,6 +241,14 @@ offsetPoints(amount){
   }
 }
 
+ function randomPoints(w,h,num){
+   var points = []
+   for (let i = 0;i<num;i++){
+     points.push(createVector(random(w),random(h)))
+   }
+   return points
+ }
+
 function distributePointsOnLine(origin, endpoint, numPoints){
   var d = dist(origin.x,origin.y,endpoint.x,endpoint.y);
   var spacer = d / numPoints;

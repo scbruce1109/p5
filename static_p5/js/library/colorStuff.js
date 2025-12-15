@@ -266,6 +266,9 @@ class colorPalette{
   }
 
   getColor(val, reps){
+    if (!reps){
+      reps = 1
+    }
      if (val > 1.0){
        val = 1.0;
      }
@@ -474,4 +477,34 @@ class ColorWheel {
   }
 
 
+}
+
+
+function paintStrokes(num,cpalette){
+  for (let i =0;i<num;i++){
+    // var p = placePoint(createVector(width/2,height/2),200,false)
+    var p = createVector(random(width),random(height))
+    var c1 = cpalette.getValue(p.x,p.y).c
+    c1.setAlpha(0.1)
+    fill(c1);
+    noStroke();
+    rect(p.x,p.y,random(100),random(100))
+    var zoop = generatePoints(p.x, p.y,random(100),random(200),Math.floor(random(3,8)))
+    var ding = new myShape(zoop,true)
+    ding.offsetPoints(random(200))
+    ding.subdivide(2)
+    // console.log(ding.points)
+    ding.offsetPoints(random(20))
+    ding.subdivide(2)
+    // console.log(ding.points)
+    ding.offsetPoints(random(50))
+    // var c1 = g1.getValue(bgGrid.points[i][j].x,bgGrid.points[i][j].y).c
+    // c1.
+    ding.smoothChaikin(2)
+    // ding.offsetPoints(random(50))
+    // ding.smoothChaikin(2)
+    ding.offsetPoints(random(10))
+    ding.smoothChaikin(2)
+    ding.display()
+  }
 }

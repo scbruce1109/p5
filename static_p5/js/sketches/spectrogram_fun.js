@@ -2,19 +2,30 @@ var scale, a, b,n, color1, color2, cType, lType, ease, flip, hexlist, cPalette, 
 var params
 var loadColor = false
 var colName = "breweryellow"
+var img;
 
 function preload() {
   if(loadColor){
     params = loadJSON(dataURL + "spec_colors.json");
   }
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Solitude - Billie Holiday.txt");
-  // result = loadStrings(dataURL + "It's Possible - Piero Piccioni.txt");
+  // result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Without - Sampha.txt");
+  result = loadStrings(dataURL + "It's Possible - Piero Piccioni.txt");
+
+  // img = loadImage(picsUrl+ "cool_rect_colors4.png");
+  img = loadImage(picsUrl+ "dinknicecolrs.png");
 }
 
 function setup() {
-  scale = 2;
-  createCanvas(1200, 1200);
+  scale = 1;
+  createCanvas(600, 600);
+  // background(0)
   json = JSON.parse(result[0])
+
+  // image(img, 0, 0, 1200, 1200)
+  rectMode(CENTER)
+  fill(0,180)
+  noStroke()
+  // rect(width/2,height/2,600,900)
 
   if (params){
     colors = colors = Object.values(params)
@@ -54,7 +65,7 @@ console.log(hexList)
   cPalette.mapColor(1.0);
 
 
-  lType = LINEAR_;
+  lType = QUADRATIC_;
   ease = EASE_IN;
   flip = true;
 
@@ -76,6 +87,8 @@ colorMode(HSB, 360,100,100,1.0)
 }
 
 function draw() {
+// json[n].reverse()
+
 
 // // //// the new stuff
 // push();
@@ -90,16 +103,37 @@ function draw() {
 
      // function endpointFromAngle(origin, angle, distance)
 
-     var newC = cPalette.mapColor(map(json[n][i],0,255,startl,endl),cType,null,null,lType,ease,1); //// RGB with quadratic is also good
 
-     newC.setAlpha(map(json[n][i],0,255,0.0,0.2))
-     strokeWeight(scale);
-     // colorMode(RGB,255,255,255,255);
-     stroke(newC);
+     // var newC = cPalette.mapColor(map(json[n][i],0,255,startl,endl),cType,null,null,lType,ease,1); //// RGB with quadratic is also good
 
+     // newC.setAlpha(map(json[n][i],0,255,0.0,0.1))
+     // strokeWeight(scale);
+     // // colorMode(RGB,255,255,255,255);
+     // stroke(newC);
+
+
+     // var x = center.x + cos(radians(b+90))*r + (cos(radians(b+90)) * i * step * scale);
+     // var y = center.y + sin(radians(b+90))*r + (sin(radians(b+90)) * i * step * scale);
 
      var x = center.x + cos(radians(b+90)) * i * step * scale;
      var y = center.y + sin(radians(b+90)) * i * step * scale;
+
+     // var x = center.x + cos(radians(b+90)) * i * step * scale;
+     // var y = center.y + sin(radians(b+90)) * i * step * scale;
+
+     let c = img.get(int(x), int(y));
+
+     // console.log(c[0])
+      c = color(c[0],c[1],c[2])
+  c = lerpColor2(color(255),c,map(json[n][i],0,255,startl,endl),cType,null,null,lType,ease,1)
+    // c = color(0)
+    var alph = map2(json[n][i],0,255, 0, .15, QUADRATIC_, EASE_IN_OUT)
+     // c.setAlpha(map(json[n][i],0,255,0.0,0.1))
+     c.setAlpha(alph)
+     strokeWeight(scale);
+     // colorMode(RGB,255,255,255,255);
+     stroke(c);
+     // fill(c[0],c[1],c[2],20);
 
      line(x, y, x, y);
     }

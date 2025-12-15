@@ -5,7 +5,7 @@ let radius = 100/2;
 let radius2 = 100/2;
 let angle1 = 0;
 let angle2 = 0;
-let interval = 1.5 ///10000000000 ///200000
+let interval = 2000000000 ///10000000000 ///200000
 let accel = 0.1
 let dotColor;
 let ratio;
@@ -14,14 +14,14 @@ var cp;
 var scale
 
 
-var colors = ['#89c234','#fdf339'] //'#89c234','#fdf339']
+var colors = ['#ff9d00','#004496']
 
 
 function setup() {
 
-  let date1 = new Date("October 10, 1960");
+  let date1 = new Date("May 31, 1967");
   // let date2 = new Date("March 16, 1955");
-  let date2 = new Date("August 2, 1989");
+  let date2 = new Date("June 21, 1973"); //21.06.1973 & 31.05.1967
   // let date2 = new Date("October 4, 1991");
   // let date2 = new Date("October 4, 1991");
   // let date2 = new Date("November 5, 1992");
@@ -29,14 +29,14 @@ function setup() {
 
   cp = new colorPalette(colors);
 
-  scale = 3;
+  scale = 4;
   createCanvas(1080 * scale, 1080 * scale);
   centerPoint = width/2;
   // background(0,0,20);
   dotColor = color(255,100,0,100)
   radius = radius * scale;
   radius2 = radius2 * scale
-  // background(255)
+  // background(0)
   noFill();
   // for(let i=0;i<1000;i++){
   //   noStroke()
@@ -66,9 +66,9 @@ function setup() {
     noStroke()
     // rotate(radians(5));
     // ellipse(x1, y1, 10, 10);
-    ellipse(x2, y2, 5*scale, 5*scale);
+    ellipse(x2, y2, 3.5*scale, 5*scale);
     strokeWeight(1*scale)
-    c.setAlpha(0.75)
+    c.setAlpha(1)
     stroke(c)
 
     dottedLine(p1,p2,0.1,0,scale);
