@@ -7,20 +7,6 @@ function threeDRandomWalk(startLoc, numSteps,stepSize){
 }
 
 
-function getCentroid(listPoints){
-  var xAv = 0
-      yAv = 0
-  var zAv = 0;
-  for (let i = 0;i<listPoints.length;i++){
-    xAv += listPoints[i].x
-    yAv += listPoints[i].y
-    zAv += listPoints[i].z
-    // point(listPoints[i].x,listPoints[i].y)
-  }
-  return createVector(xAv/listPoints.length,yAv/listPoints.length,zAv/listPoints.length)
-}
-
-
 class Mover3D{
 
   constructor(startLoc,topSpeed,mesh,startVelocity){
@@ -184,11 +170,8 @@ class Grid2D{
     }
   }
 
-  display(camera){
-    for (let i = 0;i<this.rects.length;i++){
-      this.rects[i].display(camera)
-    }
-    // this.grid.display();
+  display(){
+    this.grid.display();
   }
 
   rotate(angle,axis){
@@ -198,7 +181,9 @@ class Grid2D{
   }
 
   displayProjected(camera){
-
+    for (let i = 0;i<this.rects.length;i++){
+      this.rects[i].display(camera)
+    }
   }
 
   placeMovers(){
@@ -345,10 +330,10 @@ class Camera{
     }
     this.worldTraslateV = p5.Vector.sub(this.location, this.sp2);
     this.tMatrix = translateMatrix(-this.worldTraslateV.x,-this.worldTraslateV.y,-this.worldTraslateV.z);
-    this.origin = new Mesh(createVector(0,0,0),[createVector(0,0,0)])
-    this.xMark = new Mesh(createVector(1,0,0),[createVector(100,0,0)])
-    this.yMark = new Mesh(createVector(0,1,0),[createVector(0,100,0)])
-    this.zMark = new Mesh(createVector(0,0,1),[createVector(0,0,100)])
+    this.origin = new Mesh(createVector(0,0,0),[createVector(0,0,0)],'p')
+    this.xMark = new Mesh(createVector(1,0,0),[createVector(100,0,0)],'p')
+    this.yMark = new Mesh(createVector(0,1,0),[createVector(0,100,0)],'p')
+    this.zMark = new Mesh(createVector(0,0,1),[createVector(0,0,100)],'p')
     this.cv = createVector(x+width_/2,y+height_/2)
     this.el = y + height_/2
     this.ml = y + height_
@@ -581,21 +566,13 @@ function applyM(p,transMatrix){
 
 class Mesh {
   constructor(centerPoint, faces, verts,line,dMode){
-    this.faces = [];
     if (verts){
       this.verts = verts;
-      for (let f = 0;f<faces.length;f++){
-        this.faces.push(faces[f].map(i => this.verts[i]))
-      }
     }
-    else {
-      this.faces = faces
-    }
-
 
     this.pVerts = [];
     this.edges = [];
-    // this.faces = faces;
+    this.faces = faces;
     this.center = centerPoint;
     this.displayMode = dMode
     this.line = line
@@ -605,17 +582,15 @@ class Mesh {
   display(camera,raw){
     var projected,faceVerts;
     var allVerts = [];
-    // if (this.verts){
-    //   projected = camera.project(this.verts)
-    // }
-    if (! raw){
-    var sorted = this.faces.sort((a, b) => p5.Vector.dist(getCentroid(b),camera.location) - p5.Vector.dist(getCentroid(a),camera.location))
-
-    for (let f = 0;f<sorted.length;f++){
-
-      // faceVerts = this.faces[f].map(i => projected[i])///this.verts
-      faceVerts = camera.project(sorted[f])
-
+    if (this.verts){
+      projected = camera.project(this.verts)
+    }
+    for (let f = 0;f<this.faces.length;f++){
+      if (! this.verts){
+      faceVerts = camera.project(this.faces[f]);
+    } else {
+      faceVerts = this.faces[f].map(i => projected[i])
+    }
 
     if (! raw){
       if (this.line){
@@ -626,21 +601,10 @@ class Mesh {
 
       pshape.display()
     }
-
+      else {
+        allVerts.push(faceVerts)
+      }
     }
-
-  } else {
-for (let f = 0;f<this.faces.length;f++){
-  faceVerts = camera.project(this.faces[f])
-      allVerts.push(faceVerts)
-    }
-    // var sorted = this.faces[0].sort((a, b) => p5.Vector.dist(b,camera.location) - p5.Vector.dist(a,camera.location))
-  }
-//     for (let f = 0;f<this.faces.length;f++){
-
-//     }
-
-
     return allVerts;
   }
 
@@ -725,18 +689,18 @@ for (let f = 0;f<this.faces.length;f++){
       var rotMatrix = rotateAroundPoint(this.center, angle, axis);
     }
 
-    // if (this.verts){
-    //   for (let i = 0;i<this.verts.length;i++){
-    //     this.verts[i] = applyM(this.verts[i],rotMatrix)
-    //   }
+    if (this.verts){
+      for (let i = 0;i<this.verts.length;i++){
+        this.verts[i] = applyM(this.verts[i],rotMatrix)
+      }
 
-    // } else {
+    } else {
       for (let i =0;i<this.faces.length;i++){
         for (let j = 0;j<this.faces[i].length;j++){
         this.faces[i][j] = applyM(this.faces[i][j],rotMatrix);
       }
       }
-    // }
+    }
     if (altPoint){
       this.center = applyM(this.center,rotMatrix)
     }
@@ -746,6 +710,7 @@ for (let f = 0;f<this.faces.length;f++){
       this.rotation.y += angle;
     } else {
       this.rotation.z += angle;
+      console.log('yum')
     }
   }
 
@@ -802,33 +767,33 @@ for (let f = 0;f<this.faces.length;f++){
 
   translate(v){
     var tMatrix = translateMatrix(v.x,v.y,v.z);
-    // if (this.verts){
-    //   for (let i = 0;i<this.verts.length;i++){
-    //     this.verts[i] = applyM(this.verts[i],tMatrix)
-    //   }
-    // } else {
+    if (this.verts){
+      for (let i = 0;i<this.verts.length;i++){
+        this.verts[i] = applyM(this.verts[i],tMatrix)
+      }
+    } else {
     for (let i =0;i<this.faces.length;i++){
       for (let j = 0;j<this.faces[i].length;j++){
       this.faces[i][j] = applyM(this.faces[i][j],tMatrix);
     }
     }
-  // }
+  }
     this.center = applyM(this.center,tMatrix)
   }
 
   scale(scaleFactor){
     var tMatrix = scaleAroundPoint(this.center,scaleFactor);
-    // if (this.verts){
-    //   for (let i = 0;i<this.verts.length;i++){
-    //     this.verts[i] = applyM(this.verts[i],tMatrix)
-    //   }
-    // } else {
+    if (this.verts){
+      for (let i = 0;i<this.verts.length;i++){
+        this.verts[i] = applyM(this.verts[i],tMatrix)
+      }
+    } else {
     for (let i =0;i<this.faces.length;i++){
       for (let j = 0;j<this.faces[i].length;j++){
       this.faces[i][j] = applyM(this.faces[i][j],tMatrix);
     }
     }
-  // }
+  }
   }
 
   // rotateMesh(angle, axis, p){
@@ -868,7 +833,7 @@ function randomEllipsePoints(loc,radius,numPoints,startA,endA){
 
 class Rect3D extends Mesh{
   constructor(center, width_, height_, centerOnBase){
-
+    super()
     var ps;
     if (! centerOnBase){
     ps = [
@@ -886,20 +851,18 @@ class Rect3D extends Mesh{
     ]
   }
     var faces = [[0,1,2,3]]
-  // this.verts = ps
-  // this.faces = faces
-  // this.center = center
-  // this.line = false
-  // this.rotation = {x:0,y:0,z:0}
-    super(center,faces,ps)
-    this.rotation = {x:0,y:0,z:0}
+  this.verts = ps
+  this.faces = faces
+  this.center = center
+  this.line = false
+  this.rotation = {x:0,y:0,z:0}
   }
 }
 
 
 class Box3D extends Mesh{
   constructor(center, width_, height_, girth, centerOnBase){
-
+    super()
     var ps;
     if (! centerOnBase){
     ps = [
@@ -925,14 +888,11 @@ class Box3D extends Mesh{
     ]
   }
     var faces = [[0,1,2,3],[0,4,5,1],[1,5,6,2],[2,6,7,3],[3,7,4,0],[4,5,6,7]]
-//   this.verts = ps
-//   this.faces = faces
-//     console.log('woop')
-//   this.center = center
-
-//   this.line = false
-//   this.rotation = {x:0,y:0,z:0}
-  super(center, faces, ps,false)
+  this.verts = ps
+  this.faces = faces
+  this.center = center
+  this.line = false
+  this.rotation = {x:0,y:0,z:0}
   }
 }
 
@@ -1044,7 +1004,7 @@ class Line3D extends Mesh{
 
   getAngle(lerpVal){
     var index = this.lerpLine(lerpVal, true);
-    var a = getAngle3D2(this.faces[0][index[1]],this.faces[0][index[1]+1])
+    var a = getAngle3D(this.faces[0][index[1]],this.faces[0][index[1]+1])
     a[2] = index[0];
     return a
   }
@@ -1192,7 +1152,7 @@ class Sphere3D extends Mesh{
     // console.log('wee')
     // v1 = p5.Vector.fromAngles(radians(90), radians(90-camera.rotation.z),-this.radius)
     // var v1 = p5.Vector.fromAngles(radians(90), radians(90-camera.rotation.z+90),this.radius)
-    var v1 = p5.Vector.fromAngles(radians(camera.rotation.x),-radians(camera.rotation.z),this.radius*2)
+    var v1 = p5.Vector.fromAngles(radians(camera.rotation.x),-radians(camera.rotation.z),this.radius)
     v1 = createVector(v1.x,v1.z,v1.y)
     var v2 = p5.Vector.add(this.center,v1)
 
@@ -1209,7 +1169,7 @@ class Sphere3D extends Mesh{
 
     for (let i = 0;i<listSpheres.length;i++){
       var other = listSpheres[i];
-      var d = this.center.dist(other.center)
+      var d = dist(this.center.x,this.center.y,other.center.x,other.center.y);
 
       if (d < this.radius + other.radius){
         overlapping = true

@@ -2,7 +2,8 @@ var cam, colors,ding
 var s,shapes,l,m, m2,m3,movers,w,e,r,ss
 var g,g2,t,sort,l2
 var palette
-var displayRect, l3
+var displayRect
+var pshapes, a
 
 loadParams = false;
 var paramName = 'sphere'
@@ -10,9 +11,9 @@ var paramName = 'sphere'
 var params = {
   noiseSeed: 0,
   locationX: 0,
-  locationY: -1000,
-  locationZ: 0,
-  rotationX: 0,
+  locationY: -2400,
+  locationZ: 1,
+  rotationX: -0,
   rotationY: -0,
   rotationZ: 0
 }
@@ -33,7 +34,7 @@ var colors = [
 // '#baccce',
 ]
 
-// colors = ["#515e67","#f1e0ac",'#ff9c5e',"#515e67"]
+colors = ["#515e67","#f1e0ac",'#ff9c5e',"#515e67"]
 
 
 
@@ -43,98 +44,142 @@ var pal = []
 
 function setup() {
   createCanvas(600, 600);
-  background('#d5f5ff');
+  background('#000000');
   w = ''
   displayRect = true
+  shapes = [];
+  a = 0
+
+  palette = new colorPalette(colors)
 
   cam = new Camera(0,0,width,height,60,createVector(params.locationX,params.locationY,params.locationZ),{x:params.rotationX,y:params.rotationY,z:params.rotationZ});
 
+  var points = []
+  var p1 = createVector(0,0,0)
+  points.push(p1)
+  for (let i = 0;i<100;i++){
+    var tt = random(1)
+    var aa = Math.floor(random(360)/90)*90
+
+    if (tt >0.5){
+      var az = aa
+      var alt = 0
+    } else {
+      var az = 0;
+      var alt = aa
+    }
+    var p = placePoint3D(p1,alt,az,random(750))
+    points.push(p)
+    p1 = p
+  }
+  console.log(points)
+
+  // var points = [
+  //   createVector(0,0,0),
+  //   createVector()
+  // ]
+  l = new Line3D(points)
+  // l.smoothChaikin(4)
+  // shapes.push(new Sphere3D(createVector(0,0,0),100))
+  // var s = new Sphere3D(createVector(200,0,0),100);
+  // console.log(s.center.dist(shapes[0].center))
+  // console.log(s.collision(shapes))
+  // shapes.push(s)
+
+  for (let i = 0;i<100;i++){
+    var p = placePoint3D(createVector(0,0,0), random(360),random(360),random(250))
+    var s = new Sphere3D(p, random(200))
+    s.c = color(random(255),random(255),0)
+    s.c.setAlpha(50)
+    if (!s.collision(shapes)){
+      if (i != 0){
+        console.log('fumpu')
+        console.log(s.radius)
+      while(!s.collision(shapes)){
+        console.log('yoingus')
+        s.radius += 2
+        // console.log(s.radius)
+      }
+    }
+    console.log('radius2')
+    console.log(s.radius)
+    shapes.push(s)
+  }
+  }
 
 
-  m = new Mover3D(createVector(0,0,200),2)
-  // var p2 = createVector(random(400),random(400),1000)
-  p = createVector(100,0,0)
-  var p2 = createVector(1000,0,1000)
-var dif = p5.Vector.sub(p,p2);
-var p3 = p5.Vector.add(p2,dif);
+  pshapes = []
+  for (let i = 0;i<shapes.length;i++){
+    // var p = placePoint3D(createVector(0,0,0),0,random(360),randomGaussian(300,200))
+    var sp = spherePoints(shapes[i].center.copy(),shapes[i].radius,100)
+    // console.log(sp)
+    // l = new Mesh(createVector(0,0,0),[sp])
+    c = new Mesh(shapes[i].center.copy(),[sp])
+    c.c = color(random(255),random(255),0)
+    c.c.setAlpha(10)
+    pshapes.push(c)
+  }
 
-  var a = getAngle3D2(p,p2)
-  var v = vectorFromAngles(a[0],a[1],100)
-  v = p5.Vector.add(v,p2);
-  dif.setMag(100);
+  var v = 0;
+  while (v <10){
+    console.log('din ding')
+    v ++
+  }
 
-
-  l = new Line3D([p2,p3])
-  l2 = new Line3D([p2.copy(),v])
-
-
-  // var v2 = vectorFromAngles(0,90,100);
-  var v2 = createVector(0,100,0)
-
-  // v2.add(p)
-  var v3 = p5.Vector.cross(p,v2)
-  v3.setMag(100)
-
-  console.log('cross')
-  console.log(v3)
-  l3 = new Line3D([p,v3])
-  // console.log(getAngle3D2(p,v2))
-  l2.translate(createVector(100,0,0))
-  g = new Grid2D(p,1000,1000,100)
-  g.rotate(radians(90),'x')
-
-  // m = new Mover_3D()
-  // r = new Rect3D(createVector(0,0,0),200,200)
-  // e = new Ellipse3D(createVector(0,0,0),100,100,100)
+  r = new Rect3D(createVector(0,0,0),50,50)
   // r.rotate(radians(90),'x')
-  // e.rotate(radians(90),'x')
+  shapes = arrayOnLine(r,l,750);
+
+  var sort = sortPoints(shapes,cam)
+  // console.log(sort)
+  // fill(0.550)
+  for (let i = 0;i<sort[0].length;i++){
+    // stroke(sort[0][i].c)
+    // sort[0][i].rotate(PI/180*10,'x')
+    // sort[0][i].rotate(PI/180*20,'z')
+    // sort[0][i].translate(createVector(0,0,10))
+    // sort[0][i].scale(1- map(sin(radians(a)),-1,1,-.003,.003))
+    // stroke(sort[0][i].c)
+
+    // sort[0][i].radius += 2
+    fill(255,50)
+    noStroke()
+    sort[0][i].display(cam)
+  }
+
 
 }
 
-class IDW_Mover extends Mover_3D{
 
-
-}
 
 
 
 function draw() {
-  background(255)
+  // background(0)
 noFill();
 stroke('black')
-// var sort = sortPoints(movers,ging,true)
-cam.displayHL()
-// if (displayRect){
-// r.display(cam)
-// }
 
-var a = getAngle3D2(m.location,p)
-// var v = vectorFromAngles(a[0],a[1]+90)
-var v = p5.Vector.cross(p, m.location)
-v.setMag(2)
-m.addForce(v);
-// m.location.add(v)
-m.display(cam)
-
+for (let i = 0;i<100;i++){
+  var t = random(1)
+  var lineAngle = l.getAngle(t)
+  var c = palette.mapColor(t, 'HSB')
+  c.setAlpha(0.5)
+  console.log(lineAngle)
+  var pp = placePoint3D(lineAngle[2],lineAngle[0]+90,lineAngle[1]+90,Math.abs(randomGaussian(0,500)))
+  stroke(c)
+  fill(c)
+  var s = new Sphere3D(pp,random(1))
+  s.display(cam)
+}
+noFill()
 // l.display(cam)
-// l2.display(cam)
-l3.display(cam)
-// g.displayProjected(cam)
 
 
-// r.fill()
-// r.translate(createVector(random(-1,1),random(-1,1),1))
+a++
+// cam.displayHL()
 
-// for (let i = 0;i<ding.length;i++){
-//   m = ding[i]
-//   var d = p5.Vector.dist(m.mesh.center,createVector(0,0,0)); //map(m.life,200,0,0,1)
-//   // var c = lerpColor(m.color,color(255),Math.abs(d/range))
-//   var c = lerpColor2(m.color,color('#d5f5ff'),map(m.life,500,0,0,1), "MIX", null, null, LINEAR_)
-//   // var c =
-//   c.setAlpha(0.10)
-//   stroke(c)
-//   fill(c)
-// }
+
+
 
 key3d(cam);
 

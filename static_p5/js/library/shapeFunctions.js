@@ -507,11 +507,15 @@ function arrayOnLine(mesh,line,num){
   var meshArray = []
   for (let i = 0;i<num;i++){
     var newP = line.lerpLine(t*i,true)
+    // var a = line.getAngle(t*i)
+    //
     var meshCopy = mesh.copy();
+    // meshCopy.rotate(radians(a[1]),'x')
+    // meshCopy.rotate(radians(a[0]),'z')
     meshCopy.translate(p5.Vector.sub(newP[0],line.origin))
-    var segA = getAngle3D(line.faces[0][newP[1]],newP[0])
+    var segA = getAngle3D2(line.faces[0][newP[1]],newP[0])
 
-    // meshCopy.rotate(radians(segA[0]+0),'x')
+    meshCopy.rotate(radians(segA[0]+0),'x')
     meshCopy.rotate(radians(segA[1]),'z')
     meshArray.push(meshCopy)
   }

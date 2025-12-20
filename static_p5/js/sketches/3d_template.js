@@ -46,13 +46,43 @@ function setup() {
   background('#d5f5ff');
   w = ''
   displayRect = true
+  shapes = [];
+
+  // shapes.push(new Sphere3D(createVector(0,0,0),100))
+  // var s = new Sphere3D(createVector(200,0,0),100);
+  // console.log(s.center.dist(shapes[0].center))
+  // console.log(s.collision(shapes))
+  // shapes.push(s)
+
+  for (let i = 0;i<10;i++){
+    var p = placePoint3D(createVector(0,0,0), random(360),random(360),random(250))
+    var s = new Sphere3D(p, random(200))
+    s.c = color(random(255),random(255),0)
+    s.c.setAlpha(50)
+    if (!s.collision(shapes)){
+      if (i != 0){
+        console.log('fumpu')
+        console.log(s.radius)
+      while(!s.collision(shapes)){
+        console.log('yoingus')
+        s.radius += 2
+        // console.log(s.radius)
+      }
+    }
+    console.log('radius2')
+    console.log(s.radius)
+    shapes.push(s)
+  }
+  }
+
+  var v = 0;
+  while (v <10){
+    console.log('din ding')
+    v ++
+  }
 
   cam = new Camera(0,0,width,height,60,createVector(params.locationX,params.locationY,params.locationZ),{x:params.rotationX,y:params.rotationY,z:params.rotationZ});
 
-  r = new Rect3D(createVector(0,0,0),200,200)
-  e = new Ellipse3D(createVector(0,0,0),100,100,100)
-  r.rotate(radians(90),'x')
-  e.rotate(radians(90),'x')
 
 }
 
@@ -64,27 +94,21 @@ function draw() {
   background(255)
 noFill();
 stroke('black')
-// var sort = sortPoints(movers,ging,true)
-// cam.displayHL()
-if (displayRect){
-r.display(cam)
+
+
+var sort = sortPoints(shapes,cam)
+// console.log(sort)
+// fill(0.550)
+for (let i = 0;i<sort[0].length;i++){
+  fill(sort[0][i].c)
+
+  // sort[0][i].radius += 2
+  sort[0][i].display(cam)
 }
-e.display(cam)
+cam.displayHL()
 
 
-// r.fill()
-// r.translate(createVector(random(-1,1),random(-1,1),1))
 
-// for (let i = 0;i<ding.length;i++){
-//   m = ding[i]
-//   var d = p5.Vector.dist(m.mesh.center,createVector(0,0,0)); //map(m.life,200,0,0,1)
-//   // var c = lerpColor(m.color,color(255),Math.abs(d/range))
-//   var c = lerpColor2(m.color,color('#d5f5ff'),map(m.life,500,0,0,1), "MIX", null, null, LINEAR_)
-//   // var c =
-//   c.setAlpha(0.10)
-//   stroke(c)
-//   fill(c)
-// }
 
 key3d(cam);
 
