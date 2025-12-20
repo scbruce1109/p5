@@ -648,7 +648,6 @@ for (let f = 0;f<this.faces.length;f++){
     var pverts = this.display(camera,true)[0]
 
     for (let i = 0;i<pverts.length;i++){
-      console.log(pverts[i])
       point(pverts[i].x,pverts[i].y)
       // ellipse(pverts[i].x,pverts[i].y,2,2)
     }
