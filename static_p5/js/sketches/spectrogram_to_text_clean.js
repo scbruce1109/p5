@@ -1,6 +1,6 @@
 var spectrumArray = [];
 var songNames = [
-  "Grateful - Nick Mara",
+  "Lady May - Tyler Childers",
 
 ]
 var title;

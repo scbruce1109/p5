@@ -7,13 +7,13 @@ function preload() {
   if(loadColor){
     params = loadJSON(dataURL + "spec_colors.json");
   }
-  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Solitude - Billie Holiday.txt");
+  result = loadStrings(docsUrl + "Art\\SplitCloud\\Etsy\\Spectrograph\\txtFiles"+"\\Lady May - Tyler Childers.txt");
   // result = loadStrings(dataURL + "It's Possible - Piero Piccioni.txt");
 }
 
 function setup() {
-  scale = 2;
-  createCanvas(1200, 1200);
+  scale = 8;
+  createCanvas(4800, 4800);
   json = JSON.parse(result[0])
 
   if (params){

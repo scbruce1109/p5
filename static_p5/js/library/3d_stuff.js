@@ -603,6 +603,9 @@ class Mesh {
   }
 
   display(camera,raw){
+    if (this.raw){
+      raw = true
+    }
     var projected,faceVerts;
     var allVerts = [];
     // if (this.verts){

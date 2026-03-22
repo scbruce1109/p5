@@ -2,7 +2,8 @@ var cam, colors,ding
 var s,shapes,l,m, m2,m3,movers,w,e,r,ss
 var g,g2,t,sort,l2
 var palette
-var displayRect
+var displayRect, frameCount
+var axis, box,guides
 
 loadParams = false;
 var paramName = 'sphere'
@@ -43,11 +44,15 @@ var pal = []
 
 function setup() {
   createCanvas(600, 600);
-  background('#d5f5ff');
+  background('#ffffff');
   w = ''
   displayRect = true
   shapes = [];
 
+  frameCount = 0;
+  axis = 'z'
+
+  guides = true
   // shapes.push(new Sphere3D(createVector(0,0,0),100))
   // var s = new Sphere3D(createVector(200,0,0),100);
   // console.log(s.center.dist(shapes[0].center))
@@ -58,19 +63,48 @@ function setup() {
   r.strokeC = color(255,0,0)
   r.strokeW = 5
   r.raw = true
+  r.guide = true
   e = new Ellipse3D(createVector(0,0,0),Math.sqrt(5000),Math.sqrt(5000),100)
+  e.strokeC = color(0,0,0,100)
+  e.strokeW = 1
+  e.guide = true
+
+  box = new Box3D(createVector(0,0,0),100,100,100,true)
 
   var r2 = new Rect3D(createVector(0,0,100),100,100)
   r2.strokeC = color(255,0,0)
   r2.strokeW = 5
   r2.raw = true
+  r2.guide = true
   var e2 = new Ellipse3D(createVector(0,0,100),Math.sqrt(5000),Math.sqrt(5000),100)
+  e2.strokeC = color(0,0,0,100)
+  e2.strokeW = 1
+  e2.guide = true
   // e.raw = false
   shapes.push(e)
   shapes.push(r)
+  shapes.push(box)
 
   shapes.push(e2)
   shapes.push(r2)
+
+  // for (let a = 0;a < 360; a += 360/48){
+  //   ellipse(width/2,height/2,200,200)
+  //
+  //   line(200,150,400,150)
+  //   var x = width/2 + cos(radians(a)) * 100;
+  //   var y = height/2 + sin(radians(a)) * 100;
+  //   ellipse(x,y,5,5)
+  //   ellipse(x,150,5,5)
+  //   text((a % 360).toString(),20,20);
+  //   // a += 360/48;
+  //   name = "rotation_" + i  + ".png"
+  //   i ++;
+  //
+  //   // saveCanvas(name)
+  //   // setTimeout(1000)
+  //   clear();
+  // }
 
 
   // for (let i = 0;i<10;i++){
@@ -102,6 +136,56 @@ function setup() {
 
   cam = new Camera(0,0,width,height,60,createVector(params.locationX,params.locationY,params.locationZ),{x:params.rotationX,y:params.rotationY,z:params.rotationZ});
 
+  for (let j = 0;j<6;j++){
+    cam.displayHL()
+
+    var name = "rotation_" + j  + ".png"
+
+      // frameCount += 1
+
+  var sort = sortPoints(shapes,cam)
+  // console.log(sort)
+  // fill(0.550)
+  for (let i = 0;i<sort[0].length;i++){
+    // fill(sort[0][i].c)
+  if (sort[0][i].c){
+    fill(sort[0][i].c)
+  }
+  if (sort[0][i].strokeC){
+    stroke(sort[0][i].strokeC)
+    strokeWeight(sort[0][i].strokeW)
+  } else {
+    stroke(0)
+    strokeWeight(1)
+    // strokeWeight(sort[0][i].strokeW)
+  }
+    // sort[0][i].radius += 2
+    if (sort[0][i].raw == true){
+      if (sort[0][i].guide == true){
+        if (guides){
+          sort[0][i].displayPoints(cam)
+        }
+      } else {
+      sort[0][i].displayPoints(cam)
+    }
+    } else {
+      if (sort[0][i].guide == true){
+        if (guides){
+          sort[0][i].display(cam)
+        }
+      } else {
+      sort[0][i].display(cam)
+    }
+
+    }
+
+  }
+  // saveCanvas(name)
+clear()
+for (let i = 0;i<sort[0].length;i++){
+  shapes[i].rotate(radians(-15),axis)
+}
+}
 
 }
 
@@ -113,6 +197,8 @@ function draw() {
   background(255)
 noFill();
 stroke('black')
+strokeWeight(1)
+cam.displayHL();
 
 
 var sort = sortPoints(shapes,cam)
@@ -133,13 +219,30 @@ if (sort[0][i].strokeC){
 }
   // sort[0][i].radius += 2
   if (sort[0][i].raw == true){
+    if (sort[0][i].guide == true){
+      if (guides){
+        sort[0][i].displayPoints(cam)
+      }
+    } else {
     sort[0][i].displayPoints(cam)
+  }
   } else {
+    if (sort[0][i].guide == true){
+      if (guides){
+        sort[0][i].display(cam)
+      }
+    } else {
     sort[0][i].display(cam)
+  }
   }
 
 }
-cam.displayHL()
+
+
+
+
+
+
 
 
 
@@ -279,6 +382,12 @@ function keyPressed() {
         axis = 'z'
   } else if (key === 'e'){
     exportParams(params);
+  } else if (key === 'g'){
+    if (guides == true){
+      guides = false
+    } else {
+      guides = true
+    }
   }
 
   if (keyCode === UP_ARROW) {

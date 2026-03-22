@@ -32,13 +32,45 @@ function setup() {
   background(255);
 
   var date = new Date()
+  // var date = new Date("August 7 1997")
+  // date.setHours(11)
   var jd = dateTimeToJulian(date)
+
+  var long = -70.66895172100718
+
+  console.log('gmst date')
+  var gmst = JDToGMST2(jd)
+  console.log(gmst)
+  localSid = getlocalSidereal(gmst, -70.66895172100718) //
+  var lat = 41.52463247463759
+  console.log('localSideral')
+  console.log(degreesToHour(localSid))
+  // console.log(JDToGMST(jd))
+
   var ndays = daysSinceJ(jd)
+  // ndays = -877.04167;
   var obliquity = obliquityOfEcliptic(ndays)
   var coord = getEclipticCoordinates(date)
-  console.log('ecliptic cord')
-  console.log(coord)
-  console.log(coord[0]%360)
+  var ra = getRightAscension2(coord[0]%360,coord[3])
+
+  console.log(ra)
+  var deg = degreesToHour(ra)
+  console.log(deg)
+  console.log(hoursToDegrees(deg))
+
+  var ha = getHourAngle(ra,localSid)
+  console.log('hour angle')
+console.log(ha)
+  var dec = getDeclination(coord[0],coord[3])
+  console.log('dec')
+  console.log(dec)
+
+  console.log('sha')
+  console.log(getSiderealHourAngle(ra)+gmst*15)
+  var ha = getSiderealHourAngle(ra)+gmst*15+long
+
+  console.log('horizontal')
+  horizontal = hourToHorizontal(ha, dec, 41.52463247463759)
 
   m = new Mover3D(createVector(0,0,0),1)
 
@@ -56,7 +88,7 @@ function setup() {
   t = 10000
 
   var tilt = getAngle3D(createVector(0,0,0),earth.center)
-  console.log('tilt: '+ tilt.toString())
+  // console.log('tilt: '+ tilt.toString())
 }
 
 

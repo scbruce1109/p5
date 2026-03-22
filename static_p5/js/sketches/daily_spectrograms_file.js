@@ -21,9 +21,9 @@ function setup() {
   // g1 = new NewGrid(0,0,width,height,5);
   // g1.fillNoise(0.006)
   g1.fillGradient(cp)
-g2.display();
-  g2.jitterGrid(2)
-  g1.display()
+// g2.display();
+//   g2.jitterGrid(2)
+//   g1.display()
 
 
 
@@ -32,26 +32,26 @@ g2.display();
   // var bgGrid = new GridBasic(0,0,width,height,2)
   var c1 = color('#efdbb7')
 
-  for (let i = 0;i<bgGrid.points.length;i++){
-    for (let j = 0;j<bgGrid.points[i].length;j++){
-      var c1 = g1.getValue(bgGrid.points[i][j].x,bgGrid.points[i][j].y).c
-      var c = jitterColor(c1,[5,5,5,0.1],true)
-        fill(c);
-        noStroke();
-        rect(bgGrid.points[i][j].x,bgGrid.points[i][j].y,bgGrid.spacing,bgGrid.spacing)
-
-    }
-  }
-
-  for (let i = 0;i<1000;i++){
-    var x = random(rectp[0],rectp[0]+400-50)
-    var y = random(rectp[1],rectp[1]+800-50)
-    var c1 = g1.getValue(x,y).c
-    c1.setAlpha(0.05)
-    noStroke()
-    fill(c1)
-    rect(x,y,random(100),random(100))
-  }
+  // for (let i = 0;i<bgGrid.points.length;i++){
+  //   for (let j = 0;j<bgGrid.points[i].length;j++){
+  //     var c1 = g1.getValue(bgGrid.points[i][j].x,bgGrid.points[i][j].y).c
+  //     var c = jitterColor(c1,[5,5,5,0.1],true)
+  //       fill(c);
+  //       noStroke();
+  //       rect(bgGrid.points[i][j].x,bgGrid.points[i][j].y,bgGrid.spacing,bgGrid.spacing)
+  //
+  //   }
+  // }
+  //
+  // for (let i = 0;i<1000;i++){
+  //   var x = random(rectp[0],rectp[0]+400-50)
+  //   var y = random(rectp[1],rectp[1]+800-50)
+  //   var c1 = g1.getValue(x,y).c
+  //   c1.setAlpha(0.05)
+  //   noStroke()
+  //   fill(c1)
+  //   rect(x,y,random(100),random(100))
+  // }
 
   json = JSON.parse(result[0])
 

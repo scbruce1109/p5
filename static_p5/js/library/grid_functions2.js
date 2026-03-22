@@ -527,12 +527,13 @@ class ColorGrid extends Grid{
 }
 
 class Mover1 {
-  constructor(x,y,topSpeed,size){
+  constructor(x,y,topSpeed,size,life){
     this.location = new p5.Vector(x,y);
     this.velocity = new p5.Vector(0,0);
     this.topSpeed = topSpeed;
     this.size= size;
     this.alive = true;
+    this.life = life;
   }
 
   applyForce(force){
@@ -546,6 +547,13 @@ class Mover1 {
 
     // this.display();
   }
+  }
+
+  checkAlive(){
+    if (this.life < 0){
+      this.alive = false
+    }
+    return this.alive
   }
 
 
@@ -562,7 +570,11 @@ class Mover1 {
     }
   }
 
+
+
   display(fillC){
+    this.checkAlive();
+    if (this.alive){
     if (! fillC){
     // fill(255,50);
     // stroke(0,50);
@@ -586,7 +598,7 @@ class Mover1 {
     // var y2 = this.location.y+sin(angle+PI/2)*10
     // line(x1,y1,x2,y2)
     // // ellipse()
-
+  }
   }
 
 }

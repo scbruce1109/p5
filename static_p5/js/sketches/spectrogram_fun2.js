@@ -12,16 +12,16 @@ function preload() {
   result = loadStrings(dataURL + "It's Possible - Piero Piccioni.txt");
 
   // img = loadImage(picsUrl+ "cool_rect_colors4.png");
-  img = loadImage(picsUrl+ "dinknicecolrs.png");
+  img = loadImage(picsUrl+ "spec_color_bg_11x14.png");
 }
 
 function setup() {
   scale = 1;
-  createCanvas(600, 600);
+  createCanvas(600, 600*14/11);
   // background(0)
   json = JSON.parse(result[0])
 
-  image(img, 0, 0, 1200, 1200)
+  image(img, 0, 0, 600, 763)
   rectMode(CENTER)
   fill(0,180)
   noStroke()
@@ -49,7 +49,7 @@ console.log(hexList)
   n = 0;
 
   center = createVector(width/2,height/2);
-  r = 1024 / 5;
+  r = 300;
   step = r / 1024;
 
   console.log('lengthy')
@@ -87,7 +87,7 @@ colorMode(HSB, 360,100,100,1.0)
 }
 
 function draw() {
-// json[n].reverse()
+json[n].reverse()
 
 
 // // //// the new stuff
@@ -112,11 +112,11 @@ function draw() {
      // stroke(newC);
 
 
-     // var x = center.x + cos(radians(b+90))*r + (cos(radians(b+90)) * i * step * scale);
-     // var y = center.y + sin(radians(b+90))*r + (sin(radians(b+90)) * i * step * scale);
+     var x = center.x + cos(radians(b+90))*100 + (cos(radians(b+90)) * i * step * scale);
+     var y = center.y + sin(radians(b+90))*100 + (sin(radians(b+90)) * i * step * scale);
 
-     var x = center.x + cos(radians(b+90)) * i * step * scale;
-     var y = center.y + sin(radians(b+90)) * i * step * scale;
+     // var x = center.x + cos(radians(b+90)) * i * step * scale;
+     // var y = center.y + sin(radians(b+90)) * i * step * scale;
 
      // var x = center.x + cos(radians(b+90)) * i * step * scale;
      // var y = center.y + sin(radians(b+90)) * i * step * scale;

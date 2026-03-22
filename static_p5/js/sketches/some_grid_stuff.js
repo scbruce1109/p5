@@ -1,0 +1,374 @@
+var ging, colors,ding
+var s,shapes,l,m, m2,m3,movers,w,e,r
+var g,g2,g3,t,sort
+
+loadParams = false;
+var paramName = 'sphere'
+
+var params = {
+  noiseSeed: 0,
+  locationX: 0,
+  locationY: -0,
+  locationZ: 1000,
+  rotationX: -0,
+  rotationY: -0,
+  rotationZ: 0
+}
+
+var colors = ['#257e15',
+'#2f9c1a',
+'#82b369',
+'#79c749',
+'#b3e913',
+'#89da44',
+'#529c82',
+'#2e9884',
+'#2e9884',
+'#38985d',
+'#2a7346',
+'#d67b29',
+]
+
+var pal = []
+
+function setup() {
+  var palette = new colorPalette(colors);
+  // frameRate(200)
+  createCanvas(600, 600);
+  // background(palette.getColor(random(1)))
+  // background(0)
+   g = new ColorGrid(0,0,width,height,5)
+   g2 = new Grid2D(createVector(0,0,0),1000,1000,100)
+
+   g3 = new VectorGrid(0,0,1000,1000,5)
+
+  var ps = []
+  for (let i = 0;i<10;i++){
+    var p = createVector(random(width),random(height))
+    p.mass = random(1,4)
+    ps.push(p)
+  }
+  g3.fillAngle(ps)
+  console.log(ps)
+  params.points = ps
+
+  // g.fillNoise(0.001)
+  // g3.display()
+  w = ''
+  // ding = 360;
+  // colors = [
+  //   color(255,0,0),
+  //   color(0,20,255)
+  // ]
+
+
+//   var ccc
+//   sort = []
+//   for (let i = 0;i<5;i++){
+//     ccc = colors[Math.floor(random(colors.length))]
+//     pal.push(ccc)
+//   }
+//   console.log(pal)
+// ccc2 = pal[0]
+// var ccc3 = pal[1]
+
+  // background('#d5f5ff');
+
+
+  // var cp = spherePoints(createVector(0,0,0),600,1000);
+  // movers = []
+  // for (let i = 0;i<cp.length;i++){
+  //   m = new Mover3D(cp[i],10, new Sphere3D(cp[i],2))
+  //   m.color = color(pal[Math.floor(random(pal.length))])
+  //   m.color.setAlpha(.20)
+  //   m.life = random(10,500)
+  //   movers.push(m)
+  //   sort.push(m.mesh)
+  // }
+
+
+
+  ging = new Camera(0,0,width,height,60,createVector(params.locationX,params.locationY,params.locationZ),{x:params.rotationX,y:params.rotationY,z:params.rotationZ});
+  console.log(palette.colorList)
+  g.fillColor(colors,randomPoints(width,height,colors.length),300,color(255))
+  // g.fillColor(colors,ps,100,color('#ffffff'))
+  // g.display();
+  g.display();
+  // for (let i =0;i<1000;i++){
+  //   // var p = placePoint(createVector(width/2,height/2),200,false)
+  //   var p = createVector(random(width),random(height))
+  //   var c1 = g.getValue(p.x,p.y).c
+  //   c1.setAlpha(0.1)
+  //   fill(c1);
+  //   noStroke();
+  //   rect(p.x,p.y,random(100),random(100))
+  //   var zoop = generatePoints(p.x, p.y,random(100),random(200),Math.floor(random(3,8)))
+  //   var ding = new myShape(zoop,true)
+  //   ding.offsetPoints(random(200))
+  //   ding.subdivide(2)
+  //   // console.log(ding.points)
+  //   ding.offsetPoints(random(20))
+  //   ding.subdivide(2)
+  //   // console.log(ding.points)
+  //   ding.offsetPoints(random(50))
+  //   // var c1 = g1.getValue(bgGrid.points[i][j].x,bgGrid.points[i][j].y).c
+  //   // c1.
+  //   ding.smoothChaikin(2)
+  //   // ding.offsetPoints(random(50))
+  //   // ding.smoothChaikin(2)
+  //   ding.offsetPoints(random(10))
+  //   ding.smoothChaikin(2)
+  //   ding.display()
+  // }
+
+
+
+  // e = new Box3D(createVector(0,0,0),100,100,100);
+
+
+  // r = new Rect3D(createVector(0,0,0),100,100)
+  // r.rotate(PI/2,'x')
+  // t = 10000
+
+  // for (let i = 0;i<cp.length;i++){
+  //   var rr = new Rect3D(cp[i].copy(),50,50);
+  //   rr.rotate(radians(90),'x')
+  //   rr.rotate(random(2*PI),'z')
+  //   var pppp = ging.project([rr.center])[0]
+  //   var cccc = g.getValue(pppp.x,pppp.y).c
+  //   cccc.setAlpha(0.7)
+  //   fill(cccc)
+  //   rr.display(ging)
+  // }
+  //
+  //
+  // stroke(cccc);
+  // noFill();
+  // g2.rotate(radians(30),'x')
+  movers = [];
+  for (let i = 0;i<5000;i++){
+    var a = random(2*PI)
+    var x = width/2 + cos(a)*200;
+    var y = height/2 + sin(a)*200;
+    var x2 = random(width);
+    var y2 = random(height)
+    var m = new Mover1(x2,y2,2,random(20),random(10));
+    m.color = g.getValue(x,y).c
+    movers.push(m)
+
+  }
+  console.log(palette.getColor(random(0,1)))
+
+}
+
+
+
+
+
+function draw() {
+
+  // background(255)
+  // g.display()
+  stroke(0,0.1)
+  noFill();
+  // g2.displayProjected(ging)
+
+// noFill();
+// stroke(255,0,0,2)
+// fill("#70904e")
+// r.rotate(PI/180,'z')
+
+// ging.displayHL();
+fill(0,0,175,.1);
+noStroke();
+for (let i = 0;i<movers.length;i++){
+  var c = movers[i].color
+  c.setAlpha(0.2)
+  fill(c)
+  movers[i].applyForce(g3.getValue(movers[i].location.x,movers[i].location.y).v)
+  movers[i].display();
+  movers[i].life -= 1
+  // movers[i].size -= .11
+}
+
+
+// var sort = sortPoints(movers,ging,true)
+// var ding = sort[0]
+// var range = (sort[2] - sort[1])*5
+//
+// var rc = color('#d5f5ff')
+// rc.setAlpha(0.2)
+
+
+// r.fill()
+// r.translate(createVector(random(-1,1),random(-1,1),1))
+
+// for (let i = 0;i<ding.length;i++){
+//   m = ding[i]
+//   var d = p5.Vector.dist(m.mesh.center,createVector(0,0,0)); //map(m.life,200,0,0,1)
+//   // var c = lerpColor(m.color,color(255),Math.abs(d/range))
+//   var pp = ging.project([m.location])[0]
+//   var c2 = g.getValue(pp.x,pp.y).c
+//   var c = lerpColor2(m.color,c2,map(m.life,500,0,0,1), "MIX", null, null, LINEAR_)
+//   m.addForce(noise3D1(m.location))////.z += map(noise(t),0,1,-1,1);  noise3D1(m.location) createVector(random(-1,1),random(-1,1),random(-1,1))
+//   // var c =
+//   c.setAlpha(0.10)
+//   stroke(c)
+//   fill(c)
+//   if (m.life >0){
+//   m.display(ging)
+// }
+//   m.life -=1
+// }
+
+t+=0.01
+if (t <.5){
+  fill(rc)
+  noStroke()
+// r.display(ging)
+}
+
+
+
+key3d();
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function castShadow(mesh, angle){
+  var shadow = [];
+  for  (let j = 0;j<mesh.faces.length;j++){
+    var sface = []
+  for (let i = 0;i<mesh.faces[j].length;i++){
+    var zoob = projectPointToGround(mesh.faces[j][i],90-35,-90);
+    // var goob = p5.Vector.add(rec[i],zoob;)
+    // var goob = ging.project([zoob]);
+    shadow.push(zoob)
+    // line(recProjec[i].x,recProjec[i].y,goob[0].x,goob[0].y)
+
+  }
+  // shadow.push(sface)
+}
+  // return new Mesh(createVector(me))
+  return shadow
+}
+
+
+
+function projectPointToGround(point, altitude, azimuthA){
+  var v = p5.Vector.fromAngles(radians(altitude),radians(azimuthA))
+  var vMag = point.z / cos(radians(altitude))
+  v.setMag(vMag);
+  // v.x += point.x;
+  // v.z += point.z;
+  v.add(point)
+  return v;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function key3d(){
+  if (keyIsPressed === true) {
+    if (key === 'w'){
+  ging.translate(w,createVector(0,10,0))
+} else if (key === 's'){
+  ging.translate(w,createVector(0,-10,-0)) ////sin(radians(ging.rotation.x))*10
+}  else if (key === 'a'){
+  ging.translate(w,createVector(-10,0,-0))
+} else if (key === 'd'){
+  ging.translate(w,createVector(10,0,-0))
+} else if (key === 'y'){
+  ging.translate(w,createVector(-0,0,10))
+} else if (key === 'h'){
+  ging.translate(w,createVector(0,0,-10))
+} else if (key === 'l'){
+  ging.rotate(w,0,0,-.5)
+  // w.rotate(ging.sp2,5,'x')
+} else if (key === 'k'){
+  ging.rotate(w,-0,0,.5)
+  // w.rotate(ging.sp2,-5,'x')
+}else if (key === 'u'){
+  ging.rotate(w,.5,0,0)
+  // w.rotate(ging.sp2,5,'x')
+} else if (key === 'j'){
+  ging.rotate(w,-.5,0,0)
+  }
+}
+
+  fill(0)
+  text("x: " + ging.rotation.x.toString(),50,50)
+  text("z: " +ging.rotation.z.toString(),50,75)
+  text("Cam location",50,100)
+  text("X: " + (ging.location.x ).toString(),50,120)
+  text("Y: " + (ging.location.y ).toString() ,50,140)
+  text("Z: " + (ging.location.z ).toString(),50,160)
+
+  params.locationX = ging.location.x;
+  params.locationY = ging.location.y;
+  params.locationZ = ging.location.z;
+  params.rotationX = ging.rotation.x;
+  params.rotationY = ging.rotation.y;
+  params.rotationZ = ging.rotation.z;
+
+}
+
+function keyPressed() {
+
+  if (key === 'x') {
+    axis = 'x'
+  } else if (key === 'y'){
+           axis = 'y'
+  } else if (key === 'z'){
+        axis = 'z'
+  } else if (key === 'e'){
+    exportParams(params);
+  }
+
+  if (keyCode === UP_ARROW) {
+    // Code to run.
+    boxCenter.rotateMesh(radians(-w.rotation),'x',w.sp2);
+    boxCenter.rotateMesh(radians(5),axis);
+    boxCenter.rotateMesh(radians(w.rotation),'x',w.sp2);
+  } else if (keyCode === DOWN_ARROW){
+    boxCenter.rotateMesh(radians(-w.rotation),'x',w.sp2);
+    boxCenter.rotateMesh(radians(-5),axis);
+    boxCenter.rotateMesh(radians(w.rotation),'x',w.sp2);
+  }
+}

@@ -19,7 +19,7 @@ function setup() {
     name = "rotation_" + i  + ".png"
     i ++;
 
-    saveCanvas(name)
+    // saveCanvas(name)
     // setTimeout(1000)
     clear();
   }
